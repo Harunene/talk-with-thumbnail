@@ -211,7 +211,7 @@ export default function Home({ messageId = '' }: HomeProps) {
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl">말풍선 썸네일 생성기</CardTitle>
               <CardDescription>
-                간단하게 말풍선 썸네일을 만들어보세요.
+                간단하게 말풍선 썸네일을 만들어보세요. (나쁜말 금지!)
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
