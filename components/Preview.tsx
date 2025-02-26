@@ -1,11 +1,40 @@
 interface PreviewProps {
-  message: string
-  imageBaseUrl?: string // 이미지 기본 URL을 위한 선택적 프로퍼티 추가
+  message: string;
+  imageBaseUrl?: string;
+  imageType?: ImageType;
 }
 
-export default function Preview({ message, imageBaseUrl = '' }: PreviewProps) {
-  const isOneLine = message.includes('\n') ? false : true
-  const imageUrl = imageBaseUrl ? `${imageBaseUrl}/images/sana.jpg` : '/images/sana.jpg';
+export type ImageType = 'sana_stare' | 'sana_dizzy' | 'cat_lick';
+
+export default function Preview({ message, imageBaseUrl = '', imageType }: PreviewProps) {
+  // 메시지 길이에 따른 글자 크기 조절을 위한 계산
+  const isOneLine = !message.includes('\n');
+  const messageLength = message.length;
+  
+  // 글자 크기 계산 함수 (메시지 길이에 반비례하게 조절)
+  const calculateFontSize = () => {
+    if (isOneLine) {
+      if (messageLength <= 10) return 48;
+      if (messageLength <= 20) return 40;
+      if (messageLength <= 30) return 32;
+      if (messageLength <= 40) return 28;
+      return 24;
+    } else {
+      const lines = message.split('\n');
+      const maxLineLength = Math.max(...lines.map(line => line.length));
+      const lineCount = lines.length;
+      
+      // 줄 수와 최대 줄 길이에 따라 글자 크기 조절
+      if (lineCount <= 2 && maxLineLength <= 15) return 32;
+      if (lineCount <= 3 && maxLineLength <= 20) return 24;
+      if (lineCount <= 4) return 18;
+      return 20;
+    }
+  };
+  
+  const fontSize = calculateFontSize();
+  const imageName = `${imageType}.jpg`;
+  const imageUrl = imageBaseUrl ? `${imageBaseUrl}/images/${imageName}` : `/images/${imageName}`;
 
   return (
     <div
@@ -72,14 +101,13 @@ export default function Preview({ message, imageBaseUrl = '' }: PreviewProps) {
         <pre
           style={{
             display: 'flex',
-            fontSize: isOneLine ? 48 : 24,
+            fontSize,
             fontWeight: 'bold',
             textAlign: 'center',
             color: '#333',
             fontFamily: 'Noto Sans CJK TC Bold, Arial, sans-serif',
             padding: '0px',
             whiteSpace: 'pre-wrap',
-            boxSizing: 'border-box',
           }}
         >
           {message}
