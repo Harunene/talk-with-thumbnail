@@ -241,25 +241,38 @@ export default function Home({ messageId = '' }: HomeProps) {
                     value="sana_stare"
                     currentValue={imageType}
                     onChange={handleImageTypeChange}
-                    imagePath="/images/sana_stare.jpg"
-                    alt="기본 (흰색)"
                   />
                   
                   <ImageRadioItem
                     value="sana_dizzy"
                     currentValue={imageType}
                     onChange={handleImageTypeChange}
-                    imagePath="/images/sana_dizzy.jpg"
-                    alt="눈빛"
                   />
                   
                   <ImageRadioItem
                     value="cat_lick"
                     currentValue={imageType}
                     onChange={handleImageTypeChange}
-                    imagePath="/images/cat_lick.jpg"
-                    alt="고양이"
                   />
+
+                  <ImageRadioItem
+                    value="cat_scared"
+                    currentValue={imageType}
+                    onChange={handleImageTypeChange}
+                  />
+
+                  <ImageRadioItem
+                    value="ichihime"
+                    currentValue={imageType}
+                    onChange={handleImageTypeChange}
+                  />
+
+                  <ImageRadioItem
+                    value="sans"
+                    currentValue={imageType}
+                    onChange={handleImageTypeChange}
+                  />
+
                 </RadioGroup>
               </div>
 

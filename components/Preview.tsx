@@ -4,7 +4,7 @@ interface PreviewProps {
   imageType?: ImageType;
 }
 
-export type ImageType = 'sana_stare' | 'sana_dizzy' | 'cat_lick';
+export type ImageType = 'sana_stare' | 'sana_dizzy' | 'cat_lick' | 'cat_scared' | 'ichihime' | 'sans';
 
 export default function Preview({ message, imageBaseUrl = '', imageType }: PreviewProps) {
   // 메시지 길이에 따른 글자 크기 조절을 위한 계산
