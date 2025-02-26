@@ -275,11 +275,7 @@ export default function Home({ messageId = '' }: HomeProps) {
                     if (currentId) setCurrentId('');
                   }}
                   className="resize-none h-24"
-                  maxLength={100}
                 />
-                <div className="text-right text-sm text-muted-foreground">
-                  {userMessage.length}/100
-                </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
