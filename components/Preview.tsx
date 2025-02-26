@@ -107,7 +107,6 @@ export default function Preview({ message, imageBaseUrl = '', imageType }: Previ
             color: '#333',
             fontFamily: 'Noto Sans CJK TC Bold, Arial, sans-serif',
             padding: '0px',
-            whiteSpace: 'pre-wrap',
           }}
         >
           {message}

@@ -22,17 +22,17 @@ export async function generateMetadata(
   const ogImageUrl = `${host}/api/og/${encodedMessage}?type=${imageType}`
   
   return {
-    title: 'Talk with thumbnail',
+    title: '',
     description: '썸네일로 말해요',
     openGraph: {
       type: "article",
-      title: 'Talk with thumbnail',
+      title: '',
       description: '썸네일로 말해요',
       images: ogImageUrl,
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Talk with thumbnail',
+      title: '.',
       description: '썸네일로 말해요',
       images: ogImageUrl,
     },
