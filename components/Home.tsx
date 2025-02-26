@@ -33,14 +33,16 @@ export default function Home() {
   const initialMessage = pathMessage || queryMessage;
   const [userMessage, setUserMessage] = useState(initialMessage);
 
-  // 로컬 개발 환경에서는 localhost:3000 사용
-  const VERCEL_URL = process.env.VERCEL_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL ?? 'localhost:3000';
-  const host = VERCEL_URL.startsWith('localhost') ? `http://${VERCEL_URL}` : `https://${VERCEL_URL}`;
-
-  // 새로운 경로 기반 URL 생성
+  // 새로운 경로 기반 URL 생성 (상대 URL 사용)
   const encodedMessage = encodeURIComponent(userMessage || '하고싶은 말');
-  const pageUrl = `${host}/${encodedMessage}`;
-  const ogImageUrl = `${host}/api/og/${encodedMessage}`;
+  const pageUrl = `/${encodedMessage}`;
+  const ogImageUrl = `/api/og/${encodedMessage}`;
+
+  // 공유용 URL은 절대 URL 필요
+  const getAbsoluteUrl = (path: string) => {
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    return `${baseUrl}${path}`;
+  };
 
   const throttledImageUrl = useThrottle(ogImageUrl, 500);
 
@@ -58,12 +60,16 @@ export default function Home() {
             <CardContent className="grid gap-6">
               <div className="grid gap-2 relative aspect-[600/315]">
                 <Card className="overflow-hidden">
-                  <Image src={throttledImageUrl}
-                    fill priority
+                  <Image 
+                    src={throttledImageUrl}
+                    fill 
+                    priority
+                    unoptimized={true}
                     alt="미리보기"
                     style={{ objectFit: "contain" }}
                     sizes="350px"
-                    className="p-1" />
+                    className="p-1" 
+                  />
                 </Card>
               </div>
               <div className="grid gap-2">
@@ -82,7 +88,7 @@ export default function Home() {
               <Button
                 className="w-full"
                 onClick={() => {
-                  navigator.clipboard.writeText(pageUrl);
+                  navigator.clipboard.writeText(getAbsoluteUrl(pageUrl));
                   toast({
                     title: "클립보드에 복사되었습니다!",
                     description: "이 URL을 SNS에 공유해보세요.",
@@ -91,7 +97,7 @@ export default function Home() {
               >
                 <Share2Icon className="mr-2 h-4 w-4" /> 링크 복사하기
               </Button>
-              <Link href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener noreferrer" className="w-full">
+              <Link href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(getAbsoluteUrl(pageUrl))}`} target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button variant="outline" className="w-full">
                   <TwitterLogoIcon className="mr-2 h-4 w-4" /> 트위터에 공유하기
                 </Button>

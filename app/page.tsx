@@ -11,27 +11,26 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const message = typeof searchParams.message === 'string' ? searchParams.message : ''
-  
-  // URL 메타데이터 구성 (message 파라미터를 경로 파라미터로 사용)
   const encodedMessage = encodeURIComponent(message || '하고싶은 말')
+
+  const VERCEL_URL = process.env.VERCEL_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL
+  const host = `https://${VERCEL_URL}`
+  const ogImageUrl = `${host}/api/og/${encodedMessage}`
   
   return {
-    title: '말풍선 썸네일 생성기',
-    description: '간단하게 말풍선 썸네일을 만들어보세요.',
+    title: 'Talk with thumbnail',
+    description: '썸네일로 말해요',
     openGraph: {
-      title: '말풍선 썸네일 생성기',
-      description: '간단하게 말풍선 썸네일을 만들어보세요.',
-      images: [{
-        url: `/api/og/${encodedMessage}`,
-        width: 600,
-        height: 315,
-      }],
+      type: "article",
+      title: 'Talk with thumbnail',
+      description: '썸네일로 말해요',
+      images: ogImageUrl,
     },
     twitter: {
       card: 'summary_large_image',
-      title: '말풍선 썸네일 생성기',
-      description: '간단하게 말풍선 썸네일을 만들어보세요.',
-      images: [`/api/og/${encodedMessage}`],
+      title: 'Talk with thumbnail',
+      description: '썸네일로 말해요',
+      images: ogImageUrl,
     },
   }
 }
