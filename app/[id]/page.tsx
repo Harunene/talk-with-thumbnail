@@ -1,6 +1,7 @@
 import Home from '@/components/Home'
 import { Metadata, ResolvingMetadata } from 'next'
 import { getMessage, getMessageData } from '@/lib/blob'
+import { headers } from 'next/headers'
 
 interface Props {
   params: { id: string }
@@ -21,6 +22,14 @@ export async function generateMetadata(
   const host = `https://${PRODUCTION_URL}`
   const ogImageUrl = `${host}/api/og/${encodedMessage}?type=${imageType}`
   
+  // UserAgent 확인
+  const headersList = headers();
+  const userAgent = headersList.get('user-agent') || '';
+  const isDiscordBot = userAgent.includes('Discordbot');
+  
+  // Discord 봇인 경우 twitter.title을 빈 문자열로, 아닌 경우 '.'로 설정
+  const twitterTitle = isDiscordBot ? '' : '.';
+
   return {
     title: '',
     description: '썸네일로 말해요',
@@ -32,7 +41,7 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: '.',
+      title: twitterTitle,
       description: '썸네일로 말해요',
       images: ogImageUrl,
     },
