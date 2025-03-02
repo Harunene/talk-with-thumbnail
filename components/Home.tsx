@@ -29,6 +29,18 @@ import { ImageType } from "@/components/Preview";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import ImageRadioItem from "@/components/ImageRadioItem";
 
+// ImageType의 모든 가능한 값을 배열로 정의
+const IMAGE_TYPES: ImageType[] = [
+  'sana_stare',
+  'sana_dizzy',
+  'cat_lick',
+  'cat_scared',
+  'ichihime',
+  'sans',
+  'hikari',
+  'nozomi'
+];
+
 interface HomeProps {
   messageId?: string;
 }
@@ -234,45 +246,17 @@ export default function Home({ messageId = '' }: HomeProps) {
                 <RadioGroup
                   onValueChange={handleImageTypeChange}
                   defaultValue={imageType}
-                  className="flex gap-4"
+                  className="grid grid-cols-4 gap-4"
                   value={imageType}
                 >
-                  <ImageRadioItem
-                    value="sana_stare"
-                    currentValue={imageType}
-                    onChange={handleImageTypeChange}
-                  />
-                  
-                  <ImageRadioItem
-                    value="sana_dizzy"
-                    currentValue={imageType}
-                    onChange={handleImageTypeChange}
-                  />
-                  
-                  <ImageRadioItem
-                    value="cat_lick"
-                    currentValue={imageType}
-                    onChange={handleImageTypeChange}
-                  />
-
-                  <ImageRadioItem
-                    value="cat_scared"
-                    currentValue={imageType}
-                    onChange={handleImageTypeChange}
-                  />
-
-                  <ImageRadioItem
-                    value="ichihime"
-                    currentValue={imageType}
-                    onChange={handleImageTypeChange}
-                  />
-
-                  <ImageRadioItem
-                    value="sans"
-                    currentValue={imageType}
-                    onChange={handleImageTypeChange}
-                  />
-
+                  {IMAGE_TYPES.map((type) => (
+                    <ImageRadioItem
+                      key={type}
+                      value={type}
+                      currentValue={imageType}
+                      onChange={handleImageTypeChange}
+                    />
+                  ))}
                 </RadioGroup>
               </div>
 
