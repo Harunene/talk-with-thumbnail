@@ -192,7 +192,8 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari' }
       <div
         style={{
           position: 'absolute',
-          bottom: '50px',
+          bottom: '30px',
+          height: '50px',
           left: textPadding,
           right: textPadding,
           color: 'white',
@@ -205,7 +206,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari' }
           textShadow: `0 0 5px ${darkNavyBlue}`, // 어두운 군청색 외부 글로우
         }}
       >
-        <div style={{ display: 'flex' }}>{message}</div>
+        <pre style={{ display: 'flex' }}>{message}</pre>
       </div>
       
       {/* 하단 삼각형 표시 */}
