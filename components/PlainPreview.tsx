@@ -138,7 +138,6 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
               justifyContent: 'center',
               alignItems: 'center',
               whiteSpace: 'pre-wrap',
-              wordBreak: 'keep-all',
               maxWidth: '100%',
             }}
           >

@@ -139,7 +139,6 @@ export default function SansPreview({ message, imageBaseUrl = '', imageType, sub
               fontFamily: '"Determination Mono", "Press Start 2P", monospace', // 픽셀 폰트 사용
               padding: '0px',
               whiteSpace: 'pre-wrap',
-              wordBreak: 'keep-all',
               maxWidth: '100%',
             }}
           >
