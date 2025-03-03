@@ -2,6 +2,43 @@ import { ImageResponse } from '@vercel/og'
 import type { ImageType } from '@/components/Preview'
 import Preview from '@/components/Preview'
 
+type Weight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+type FontStyle = 'normal' | 'italic';
+interface FontOptions {
+    data: Buffer | ArrayBuffer;
+    name: string;
+    weight?: Weight;
+    style?: FontStyle;
+    lang?: string;
+}
+
+const loadFonts = async (baseUrl: string, imageType: ImageType): Promise<FontOptions[] | undefined> => {
+  const isSans = imageType === 'sans';
+  const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi';
+
+  if (isSans) {
+    return [
+      {
+        name: 'DungGeunMo',
+        data: await fetch(new URL(`${baseUrl}/fonts/DungGeunMo.otf`, import.meta.url)).then(res => res.arrayBuffer()),
+        style: 'normal',
+      },
+    ];
+  }
+
+  if (isBlueArchive) {
+    return [
+      {
+        name: 'Gyeonggi Medium',
+        data: await fetch(new URL(`${baseUrl}/fonts/gyeonggi_medium.otf`, import.meta.url)).then(res => res.arrayBuffer()),
+        style: 'normal',
+      },
+    ];
+  }
+
+  return undefined;
+};
+
 export const commonImageResponse = async (
   baseUrl: string, 
   message: string, 
@@ -11,6 +48,7 @@ export const commonImageResponse = async (
   try {
     
     const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi';
+    const fonts = await loadFonts(baseUrl, imageType);
 
     return new ImageResponse(
       (
@@ -28,13 +66,7 @@ export const commonImageResponse = async (
         headers: {
           'Cache-Control': 'public, max-age=3600, s-maxage=3600',
         },
-        fonts: isBlueArchive ? [
-          {
-            name: 'Gyeonggi Medium',
-            data: await fetch(new URL(`${baseUrl}/fonts/gyeonggi_medium.otf`, import.meta.url)).then(res => res.arrayBuffer()),
-            style: 'normal',
-          },
-        ] : undefined,
+        fonts: fonts,
       }
     )
   } catch (e: any) {
