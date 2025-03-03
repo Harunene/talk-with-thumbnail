@@ -1,4 +1,6 @@
 import type { ImageType, PreviewProps } from './Preview';
+import React from 'react';
+import { EmptyLine } from '@/lib/EmptyLine';
 
 // 블루 아카이브 스타일의 말풍선 컴포넌트
 function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', subType = '001' }: PreviewProps) {
@@ -209,7 +211,15 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
           textShadow: `0 0 5px ${darkNavyBlue}`, // 어두운 군청색 외부 글로우
         }}
       >
-        <pre style={{ display: 'flex' }}>{message}</pre>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {message.split('\n').map((line, index) => (
+            // tslint:disable-next-line:react-no-array-index-key
+            <React.Fragment key={index}>
+              {index > 0 && <br />}
+              {line ? line : <EmptyLine />}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
       
       {/* 하단 삼각형 표시 */}
