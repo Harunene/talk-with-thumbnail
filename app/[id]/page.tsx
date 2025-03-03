@@ -1,5 +1,5 @@
 import Home from '@/components/Home'
-import { Metadata, ResolvingMetadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { getMessage, getMessageData } from '@/lib/blob'
 import { headers } from 'next/headers'
 
@@ -16,11 +16,12 @@ export async function generateMetadata(
   const messageData = await getMessageData(params.id)
   const encodedMessage = encodeURIComponent(messageData?.message || '')
   const imageType = messageData?.imageType || 'sana_stare'
+  const subType = messageData?.subType || ''
 
   // 프로덕션 도메인 설정 - 환경변수 또는 하드코딩된 도메인 사용
   const PRODUCTION_URL = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL || 'talk.nene.dev'
   const host = `https://${PRODUCTION_URL}`
-  const ogImageUrl = `${host}/api/og/${encodedMessage}?type=${imageType}`
+  const ogImageUrl = `${host}/api/og/${encodedMessage}?type=${imageType}&subType=${subType}`
   
   // UserAgent 확인
   const headersList = headers();

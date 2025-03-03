@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { storeMessage, MessageData } from '@/lib/blob';
+import { type NextRequest, NextResponse } from 'next/server';
+import { storeMessage, type MessageData } from '@/lib/blob';
 
 export async function POST(request: NextRequest) {
   try {
     // 요청 본문에서 데이터 추출
     const body = await request.json();
-    const { message, imageType } = body;
+    const { message, imageType, subType } = body;
     
     // 메시지 검증
     if (!message || typeof message !== 'string' || message.trim() === '') {
@@ -21,14 +21,15 @@ export async function POST(request: NextRequest) {
     // 메시지 데이터 준비
     const messageData: MessageData = {
       message: trimmedMessage,
-      imageType: imageType || 'default' // 기본값 설정
+      imageType: imageType || 'default',
+      subType: subType || ''
     };
     
     // Blob에 저장
     const id = await storeMessage(messageData);
     
     // 성공 응답
-    return NextResponse.json({ id, message: trimmedMessage, imageType: messageData.imageType });
+    return NextResponse.json({ id, message: trimmedMessage, imageType: messageData.imageType, subType: messageData.subType });
   } catch (error) {
     console.error('메시지 저장 실패:', error);
     return NextResponse.json(
