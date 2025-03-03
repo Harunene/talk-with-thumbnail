@@ -1,6 +1,4 @@
-import { EmptyLine } from '@/lib/EmptyLine';
 import type { PreviewProps } from './Preview';
-import React from 'react';
 
 export default function SansPreview({ message, imageBaseUrl = '', imageType, subType = '' }: PreviewProps) {
   // 메시지 길이에 따른 글자 크기 조절을 위한 계산
@@ -129,30 +127,24 @@ export default function SansPreview({ message, imageBaseUrl = '', imageType, sub
             width: '100%',
           }}
         >
-          <div
+          <pre
             style={{
               display: 'flex',
-              flexDirection: 'column',
               margin: 0,
               fontSize: `${fontSize}px`,
               fontWeight: 'bold',
               textAlign: 'left',
               color: '#000',
               fontSmooth: 'never',
-              fontFamily: 'DungGeunMo',
+              fontFamily: '"Determination Mono", "Press Start 2P", monospace', // 픽셀 폰트 사용
               padding: '0px',
+              whiteSpace: 'pre-wrap',
               wordBreak: 'keep-all',
               maxWidth: '100%',
             }}
           >
-            {message.split('\n').map((line, index) => (
-              // tslint:disable-next-line:react-no-array-index-key
-              <React.Fragment key={index}>
-                {index > 0 && <br />}
-                {line ? line : <EmptyLine />}
-              </React.Fragment>
-            ))}
-          </div>
+            {message}
+          </pre>
         </div>
       </div>
     </div>

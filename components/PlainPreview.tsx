@@ -1,6 +1,4 @@
-import { EmptyLine } from '@/lib/EmptyLine';
 import type { PreviewProps } from './Preview';
-import React from 'react';
 
 export default function PlainPreview({ message, imageBaseUrl = '', imageType, subType = '' }: PreviewProps) {
   // 메시지 길이에 따른 글자 크기 조절을 위한 계산
@@ -127,10 +125,9 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
             padding: '10px',
           }}
         >
-          <div
+          <pre
             style={{
               display: 'flex',
-              flexDirection: 'column',
               fontSize: `${fontSize}px`,
               fontWeight: 'bold',
               textAlign: 'center',
@@ -138,18 +135,15 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
               fontFamily: 'Noto Sans CJK TC Bold, Arial, sans-serif',
               padding: '0px',
               margin: '0',
+              justifyContent: 'center',
+              alignItems: 'center',
+              whiteSpace: 'pre-wrap',
               wordBreak: 'keep-all',
               maxWidth: '100%',
             }}
           >
-            {message.split('\n').map((line, index) => (
-              // tslint:disable-next-line:react-no-array-index-key
-              <React.Fragment key={index}>
-                {index > 0 && <br />}
-                {line ? line : <EmptyLine />}
-              </React.Fragment>
-            ))}
-          </div>
+            {message}
+          </pre>
         </div>
       </div>
     </div>
