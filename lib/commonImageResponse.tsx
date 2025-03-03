@@ -1,14 +1,25 @@
 import { ImageResponse } from '@vercel/og'
-import Preview, { ImageType } from '@/components/Preview'
+import type { ImageType } from '@/components/Preview'
+import Preview from '@/components/Preview'
 
-export const commonImageResponse = async (baseUrl: string, message: string, imageType: ImageType) => {
+export const commonImageResponse = async (
+  baseUrl: string, 
+  message: string, 
+  imageType: ImageType,
+  subType?: string
+) => {
   try {
     
     const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi';
 
     return new ImageResponse(
       (
-        <Preview message={message} imageBaseUrl={baseUrl} imageType={imageType} />
+        <Preview 
+          message={message} 
+          imageBaseUrl={baseUrl} 
+          imageType={imageType} 
+          subType={subType}
+        />
       ),
       {
         width: 600,

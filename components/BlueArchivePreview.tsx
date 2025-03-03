@@ -1,7 +1,7 @@
 import type { ImageType, PreviewProps } from './Preview';
 
 // 블루 아카이브 스타일의 말풍선 컴포넌트
-function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari' }: PreviewProps) {
+function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', subType = '001' }: PreviewProps) {
   
   // 캐릭터별 설정
   const characterConfig = {
@@ -9,23 +9,26 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari' }
       name: '히카리',
       nameColor: '#FFFFFF', // 흰색으로 변경
       textColor: '#FFFFFF',
-      // 각 캐릭터별로 다른 이미지 사용 (랜덤하게 선택)
-      imageIndex: Math.floor(Math.random() * 18) + 1, // 1-18 사이의 랜덤 숫자
+      maxSubTypes: 18, // 히카리의 최대 이미지 인덱스
     },
     nozomi: {
       name: '노조미',
       nameColor: '#FFFFFF', // 흰색으로 변경
       textColor: '#FFFFFF',
-      // 각 캐릭터별로 다른 이미지 사용 (랜덤하게 선택)
-      imageIndex: Math.floor(Math.random() * 21) + 1, // 1-21 사이의 랜덤 숫자
+      maxSubTypes: 21, // 노조미의 최대 이미지 인덱스
     }
   };
   
   const config = characterConfig[imageType as 'hikari' | 'nozomi'];
   
+  // subType 유효성 검사 (비어있거나 범위를 벗어나면 001로 설정)
+  const validSubType = (subType && /^\d{3}$/.test(subType) && Number(subType) > 0 && Number(subType) <= config.maxSubTypes) 
+    ? subType 
+    : '001';
+  
   // 이미지 경로 설정 (작은 이미지 사용)
   const bgImagePath = `${imageBaseUrl}/images/bluearchive/bg.jpg`;
-  const charImagePath = `${imageBaseUrl}/images/bluearchive/char_small/${imageType}/up_${imageType}_001.png`;
+  const charImagePath = `${imageBaseUrl}/images/bluearchive/char_small/${imageType}/up_${imageType}_${validSubType}.png`;
 
   // 어두운 군청색 (아웃라인 및 글로우 효과용)
   const darkNavyBlue = '#1A2B5F';
@@ -197,7 +200,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari' }
           left: textPadding,
           right: textPadding,
           color: 'white',
-          fontSize: `14px`,
+          fontSize: '14px',
           lineHeight: 1.4,
           display: 'flex',
           flexDirection: 'column',
@@ -220,7 +223,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari' }
           alignItems: 'center',
         }}
       >
-        <svg width="10" height="7" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg">
+        <svg width="10" height="7" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M0,0 L20,0 L10,15 Z" fill="rgb(57, 209, 255)" />
         </svg>
       </div>

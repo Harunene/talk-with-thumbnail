@@ -1,6 +1,6 @@
 import type { PreviewProps } from './Preview';
 
-export default function PlainPreview({ message, imageBaseUrl = '', imageType, subType = '' }: PreviewProps) {
+export default function SansPreview({ message, imageBaseUrl = '', imageType, subType = '' }: PreviewProps) {
   // 메시지 길이에 따른 글자 크기 조절을 위한 계산
   const isOneLine = !message.includes('\n');
   const messageLength = message.length;
@@ -28,11 +28,11 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
   };
   
   const fontSize = calculateFontSize() * 1.2;
-  const imageName = `${imageType}.png`;
-  const imageUrl = imageBaseUrl ? `${imageBaseUrl}/images/${imageName}` : `/images/${imageName}`;
-
+  
+  const bgImageUrl = imageBaseUrl ? `${imageBaseUrl}/images/sans/bg.jpg` : '/images/sans/bg.jpg';
+  
   // 말풍선 너비 고정 (가로 크기 고정)
-  const speechBubbleWidth = 350;
+  const speechBubbleWidth = 300;
   
   // 말풍선 최소 높이 설정 (기본 높이)
   const minSpeechBubbleHeight = 80;
@@ -50,6 +50,13 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
   const extraHeight = calculateExtraHeight();
   const speechBubbleHeight = minSpeechBubbleHeight + extraHeight;
 
+  // 픽셀화된 테두리 스타일 (도트 그래픽 효과)
+  const pixelatedBorder = {
+    borderStyle: 'solid',
+    borderWidth: '4px',
+    borderColor: 'black',
+  };
+
   return (
     <div
       style={{
@@ -58,26 +65,26 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         position: 'relative',
+        imageRendering: 'pixelated' as const,
       }}
     >
-      {/* 캐릭터 이미지 */}
+      {/* 배경 이미지 */}
       <img
-        src={imageUrl}
-        alt="캐릭터"
+        src={bgImageUrl}
+        alt="배경"
         style={{
           position: 'absolute',
-          bottom: '10px',
-          left: '60px',
-          width: '120px',
-          height: '120px',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
           objectFit: 'cover',
-          borderRadius: '5px',
           display: 'block',
         }}
       />
-      
+            
       {/* 말풍선 */}
       <div
         style={{
@@ -87,31 +94,27 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
           width: `${speechBubbleWidth}px`,
           minHeight: `${speechBubbleHeight}px`,
           backgroundColor: 'white',
-          borderRadius: '15px',
-          border: '3px solid black',
-          boxSizing: 'border-box',
+          borderRadius: '20px',
+          padding: '15px',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
           justifyContent: 'center',
+          alignItems: 'center',
           transform: 'translateY(-50%)', // 세로 중앙 정렬
+          imageRendering: 'pixelated'
         }}
       >
         {/* 말풍선 꼬리 */}
         <div
           style={{
             position: 'absolute',
-            bottom: '-15px',
-            left: '0px',
-            width: '30px',
-            height: '30px',
+            top: '10px',
+            left: '-20px',
+            width: '50px',
+            height: '50px',
             backgroundColor: 'white',
-            border: '5px solid black',
-            borderTop: 'none',
-            borderRight: 'none',
-            transform: 'scaleX(0.6) skewX(-65deg) rotate(-45deg)',
-            transformOrigin: 'center',
-            borderRadius: '10px',
+            transform: 'scaleY(0.3) rotate(45deg)',
+            borderRadius: '6px',
+            imageRendering: 'pixelated'
           }}
         />
         
@@ -119,24 +122,22 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
         <div
           style={{
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
             width: '100%',
-            padding: '10px',
           }}
         >
           <pre
             style={{
               display: 'flex',
+              margin: 0,
               fontSize: `${fontSize}px`,
               fontWeight: 'bold',
-              textAlign: 'center',
-              color: '#333',
-              fontFamily: 'Noto Sans CJK TC Bold, Arial, sans-serif',
+              textAlign: 'left',
+              color: '#000',
+              fontSmooth: 'never',
+              fontFamily: '"Determination Mono", "Press Start 2P", monospace', // 픽셀 폰트 사용
               padding: '0px',
-              margin: '0',
-              justifyContent: 'center',
-              alignItems: 'center',
               whiteSpace: 'pre-wrap',
               wordBreak: 'keep-all',
               maxWidth: '100%',
@@ -148,5 +149,4 @@ export default function PlainPreview({ message, imageBaseUrl = '', imageType, su
       </div>
     </div>
   );
-}
-
+} 

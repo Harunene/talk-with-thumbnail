@@ -1,42 +1,42 @@
-import { RadioGroupItem } from "@radix-ui/react-radio-group";
-import { Label } from "@/components/ui/label";
+import { RadioGroupItem } from "@/components/ui/radio-group";
+import { ImageType } from "@/components/Preview";
 import Image from "next/image";
-import { ImageType } from "./Preview";
 
+interface ImageRadioItemProps {
+  value: string;
+  currentValue: string;
+  onChange: (value: string) => void;
+  subType?: string;
+}
 
-export default function ImageRadioItem({ 
-  value, 
-  currentValue, 
-  onChange, 
-}: { 
-  value: ImageType; 
-  currentValue: ImageType; 
-  onChange: (value: ImageType) => void; 
-}) {
+export default function ImageRadioItem({ value, currentValue, onChange, subType = '001' }: ImageRadioItemProps) {
+  const isBlueArchive = value === 'hikari' || value === 'nozomi';
+  const imagePath = isBlueArchive
+    ? `/images/bluearchive/char_face/${value}/up_${value}_${subType}.png`
+    : `/images/${value}.png`;
+
   return (
     <div className="relative">
       <RadioGroupItem
         value={value}
         id={value}
-        className="sr-only"
+        className="peer sr-only"
+        aria-label={value}
       />
-      <Label
+      <label
         htmlFor={value}
-        className={`relative cursor-pointer rounded-md overflow-hidden block ${
-          currentValue === value
-            ? 'ring-4 ring-primary ring-offset-2'
-            : 'hover:opacity-80'
-        }`}
+        className="flex flex-col items-center justify-between rounded-md border-4 border-muted bg-popover hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([aria-checked=true])]:border-primary"
       >
-        <Image src={`/images/${value}.jpg`} alt={value} width={50} height={50} className="object-cover" />
-        {currentValue === value && (
-          <div className="absolute top-1 right-1 rounded-full bg-primary w-4 h-4 flex items-center justify-center text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        )}
-      </Label>
+        <div className="relative w-full aspect-square">
+          <Image
+            src={imagePath}
+            alt={value}
+            fill
+            className="object-contain p-1"
+            sizes="100px"
+          />
+        </div>
+      </label>
     </div>
   );
-};
+}

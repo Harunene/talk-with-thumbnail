@@ -25,9 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ImageType } from "@/components/Preview";
+import type { ImageType } from "@/components/Preview";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import ImageRadioItem from "@/components/ImageRadioItem";
+import { Slider } from "@/components/ui/slider";
 
 // ImageType의 모든 가능한 값을 배열로 정의
 const IMAGE_TYPES: ImageType[] = [
@@ -40,6 +41,25 @@ const IMAGE_TYPES: ImageType[] = [
   'hikari',
   'nozomi'
 ];
+
+// 블루 아카이브 캐릭터 정보
+const BLUE_ARCHIVE_CHARACTERS = {
+  hikari: {
+    name: '히카리',
+    maxSubTypes: 18,
+    lastSubType: '001'
+  },
+  nozomi: {
+    name: '노조미',
+    maxSubTypes: 21,
+    lastSubType: '001'
+  }
+};
+
+// 블루 아카이브 캐릭터인지 확인하는 함수
+const isBlueArchiveCharacter = (type: ImageType): boolean => {
+  return type === 'hikari' || type === 'nozomi';
+};
 
 interface HomeProps {
   messageId?: string;
@@ -55,6 +75,18 @@ export default function Home({ messageId = '' }: HomeProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentId, setCurrentId] = useState(messageId);
   const [imageType, setImageType] = useState<ImageType>('sana_stare');
+  const [subType, setSubType] = useState<string>('');
+  const [lastSubTypes, setLastSubTypes] = useState<Record<ImageType, string>>(() => {
+    // 초기값으로 각 캐릭터의 기본 subType을 설정
+    return Object.fromEntries(
+      IMAGE_TYPES.map(type => [
+        type,
+        isBlueArchiveCharacter(type) 
+          ? BLUE_ARCHIVE_CHARACTERS[type as 'hikari' | 'nozomi'].lastSubType 
+          : ''
+      ])
+    ) as Record<ImageType, string>;
+  });
   
   // 경로 매개변수나 쿼리 매개변수에서 메시지 가져오기
   useEffect(() => {
@@ -68,20 +100,28 @@ export default function Home({ messageId = '' }: HomeProps) {
           if (data.imageType) {
             setImageType(data.imageType as ImageType);
           }
+          if (data.subType) {
+            setSubType(data.subType);
+            // lastSubTypes도 업데이트
+            setLastSubTypes(prev => ({
+              ...prev,
+              [data.imageType]: data.subType
+            }));
+          }
         })
         .catch(err => {
           console.error('메시지 조회 실패:', err);
           setUserMessage('');
         });
     }
-  }, [messageId, params, searchParams]);
+  }, [messageId]);
 
   // 미리보기 이미지 URL - 실시간 변경을 위해 메시지 직접 사용
   const encodedMessage = encodeURIComponent(userMessage || '');
   // 메시지가 비어있으면 기본 경로 사용
   const ogImageUrl = userMessage.trim() 
-    ? `/api/og/${encodedMessage}?type=${imageType}` 
-    : `/api/og/?type=${imageType}`;
+    ? `/api/og/${encodedMessage}?type=${imageType}&subType=${subType}` 
+    : `/api/og/?type=${imageType}&subType=${subType}`;
 
   // 공유 처리 함수
   const handleShare = async () => {
@@ -106,7 +146,8 @@ export default function Home({ messageId = '' }: HomeProps) {
           },
           body: JSON.stringify({ 
             message: userMessage,
-            imageType: imageType 
+            imageType: imageType,
+            subType: subType // 모든 이미지 타입에 대해 subType 전송
           }),
         });
         
@@ -143,8 +184,37 @@ export default function Home({ messageId = '' }: HomeProps) {
 
   // 스타일 변경 시 ID 초기화 (새로운 해시가 생성되도록)
   const handleImageTypeChange = (value: string) => {
-    setImageType(value as ImageType);
+    const newType = value as ImageType;
+    setImageType(newType);
     if (currentId) setCurrentId('');
+    
+    // 이전에 선택했던 subType으로 복원
+    setSubType(lastSubTypes[newType]);
+  };
+  
+  // subType 변경 시 ID 초기화
+  const handleSubTypeChange = (value: number[]) => {
+    const newSubType = value[0].toString().padStart(3, '0');
+    setSubType(newSubType);
+    // 현재 이미지 타입의 마지막 선택을 저장
+    setLastSubTypes(prev => ({
+      ...prev,
+      [imageType]: newSubType
+    }));
+    if (currentId) setCurrentId('');
+  };
+
+  // 현재 선택된 캐릭터의 최대 subType 가져오기
+  const getMaxSubTypes = (): number => {
+    if (isBlueArchiveCharacter(imageType)) {
+      return BLUE_ARCHIVE_CHARACTERS[imageType as 'hikari' | 'nozomi'].maxSubTypes;
+    }
+    return 1;
+  };
+
+  // subType을 숫자로 변환
+  const getSubTypeNumber = (): number => {
+    return Number.parseInt(subType, 10);
   };
 
   // 공유용 URL은 절대 URL 필요
@@ -227,22 +297,22 @@ export default function Home({ messageId = '' }: HomeProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-              <div className="grid gap-2 relative aspect-[600/315]">
-                <Card className="overflow-hidden">
-                  <Image 
-                    src={throttledImageUrl}
-                    fill 
-                    priority
-                    unoptimized={true}
-                    alt="미리보기"
-                    style={{ objectFit: "contain" }}
-                    sizes="350px"
-                    className="p-1" 
-                  />
+              <div className="grid relative aspect-[600/315]">
+                <Card className="overflow-hidden border">
+                  <div className="relative w-full h-full rounded-md overflow-hidden">
+                    <Image 
+                      src={throttledImageUrl}
+                      fill 
+                      priority
+                      unoptimized={true}
+                      alt="미리보기"
+                      sizes="350px"
+                    />
+                  </div>
                 </Card>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="image-type">말풍선 이미지</Label>
+                <Label htmlFor="image-type">캐릭터 이미지</Label>
                 <RadioGroup
                   onValueChange={handleImageTypeChange}
                   defaultValue={imageType}
@@ -255,10 +325,35 @@ export default function Home({ messageId = '' }: HomeProps) {
                       value={type}
                       currentValue={imageType}
                       onChange={handleImageTypeChange}
+                      subType={lastSubTypes[type]}
                     />
                   ))}
                 </RadioGroup>
               </div>
+              
+              {/* 블루 아카이브 캐릭터 선택 시 subType 선택 UI 표시 */}
+              {isBlueArchiveCharacter(imageType) && (
+                <div className="grid gap-2">
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="sub-type">캐릭터 표정 선택</Label>
+                    <span className="text-sm text-muted-foreground">
+                      {getSubTypeNumber()} / {getMaxSubTypes()}
+                    </span>
+                  </div>
+                  <Slider
+                    id="sub-type"
+                    min={1}
+                    max={getMaxSubTypes()}
+                    step={1}
+                    value={[getSubTypeNumber()]}
+                    onValueChange={handleSubTypeChange}
+                    className="py-2"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {BLUE_ARCHIVE_CHARACTERS[imageType as 'hikari' | 'nozomi'].name}의 다양한 표정을 선택해보세요.
+                  </p>
+                </div>
+              )}
 
               <div className="grid gap-2">
                 <Label htmlFor="message">하고싶은 말</Label>
