@@ -180,7 +180,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
       <hr
         style={{
           position: 'absolute',
-          bottom: '72px',
+          top: '76%',
           left: textPadding,
           right: textPadding,
           border: 'none',
@@ -195,8 +195,8 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
       <div
         style={{
           position: 'absolute',
-          bottom: '30px',
-          height: '50px',
+          top: '78%',
+          height: 'auto', // 고정 높이 대신 자동 높이 설정
           left: textPadding,
           right: textPadding,
           color: 'white',
@@ -207,9 +207,18 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
           textShadow: `0 0 5px ${darkNavyBlue}`, // 어두운 군청색 외부 글로우
+          overflow: 'hidden', // 내용이 넘칠 경우 숨김 처리
         }}
       >
-        <pre style={{ display: 'flex' }}>{message}</pre>
+        <div style={{ 
+          display: 'block',
+          width: '100%',
+          wordBreak: 'break-word', // 단어 단위로 줄바꿈
+          whiteSpace: 'pre-wrap', // 공백과 줄바꿈 유지하면서 자동 줄바꿈
+          overflow: 'hidden', // 내용이 넘칠 경우 숨김 처리
+        }}>
+          {message}
+        </div>
       </div>
       
       {/* 하단 삼각형 표시 */}
