@@ -262,7 +262,7 @@ export default function Home({ messageId = '' }: HomeProps) {
     }
     
     // Web Share API 지원 확인
-    if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    if (navigator.share) {
       try {
         await navigator.share({
           url: shareUrl
