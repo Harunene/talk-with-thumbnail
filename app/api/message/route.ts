@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // 메시지 길이 제한 (100자)
-    const trimmedMessage = message.slice(0, 100).trim();
+    // 메시지 길이 제한 (200자)
+    const trimmedMessage = message.slice(0, 200).trim();
     
     // 메시지 데이터 준비
     const messageData: MessageData = {

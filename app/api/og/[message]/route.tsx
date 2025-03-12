@@ -7,7 +7,7 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { message: string } }
 ) {
-  const message = decodeURIComponent(params.message).slice(0, 100).trim() || '하고싶은 말'
+  const message = decodeURIComponent(params.message).slice(0, 200).trim() || '하고싶은 말'
   const { searchParams } = new URL(req.url);
   const imageType = searchParams.get('type') as ImageType || 'sana_stare';
   const subType = searchParams.get('subType') || '';
