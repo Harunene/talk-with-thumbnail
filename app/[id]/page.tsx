@@ -2,29 +2,33 @@ import Home from '@/components/Home'
 import type { Metadata, ResolvingMetadata } from 'next'
 import { getMessage, getMessageData } from '@/lib/blob'
 import { headers } from 'next/headers'
+import { Suspense } from 'react'
 
-interface Props {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+type Props = {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const { id } = await params
+
   // ID로 Blob에서 메시지 조회
-  const messageData = await getMessageData(params.id)
+  const messageData = await getMessageData(id)
   const encodedMessage = encodeURIComponent(messageData?.message || '')
   const imageType = messageData?.imageType || 'sana_stare'
   const subType = messageData?.subType || ''
+  const zoomMode = messageData?.zoomMode || false
 
   // 프로덕션 도메인 설정 - 환경변수 또는 하드코딩된 도메인 사용
   const PRODUCTION_URL = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL || 'talk.nene.dev'
   const host = `https://${PRODUCTION_URL}`
-  const ogImageUrl = `${host}/api/og/${encodedMessage}?type=${imageType}&subType=${subType}`
+  const ogImageUrl = `${host}/api/og/${encodedMessage}?type=${imageType}&subType=${subType}&zoom=${zoomMode}`
   
   // UserAgent 확인
-  const headersList = headers();
+  const headersList = await headers()
   const userAgent = headersList.get('user-agent') || '';
   const isDiscordBot = userAgent.includes('Discordbot');
   
@@ -49,8 +53,15 @@ export async function generateMetadata(
   }
 }
 
-export default function Page({ params }: Props) {
+export default async function Page(props: Props) {
+  const { id } = await props.params
+
+  // 로딩 상태를 보여줄 간단한 fallback UI
+  const LoadingFallback = () => <div>Loading...</div>;
+
   return (
-    <Home messageId={params.id} />
+    <Suspense fallback={<LoadingFallback />}>
+      <Home messageId={id} />
+    </Suspense>
   )
 } 

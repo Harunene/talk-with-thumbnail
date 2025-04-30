@@ -1,7 +1,7 @@
 import type { ImageType, PreviewProps } from './Preview';
 
 // 블루 아카이브 스타일의 말풍선 컴포넌트
-function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', subType = '001' }: PreviewProps) {
+function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', subType = '001', zoomMode = false }: PreviewProps) {
   
   // 캐릭터별 설정
   const characterConfig = {
@@ -26,7 +26,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
     ? subType 
     : '001';
   
-  // 이미지 경로 설정 (작은 이미지 사용)
+  // 이미지 경로 설정
   const bgImagePath = `${imageBaseUrl}/images/bluearchive/bg.jpg`;
   const charImagePath = `${imageBaseUrl}/images/bluearchive/char_small/${imageType}/up_${imageType}_${validSubType}.png`;
 
@@ -37,6 +37,12 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
 
   const dialogBackgroundColor = (opacity: number) => `rgba(12, 17, 29, ${opacity})`;
 
+  console.log(zoomMode);
+
+  // --- 스타일 변수 --- 
+  const charImageHeight = zoomMode ? '200%' : '150%'; // 확대 시 높이 증가
+  const charImageBottom = zoomMode ? '-320px' : '-180px'; // 확대 시 더 위로 이동 (조정 필요)
+  const messageFontSize = zoomMode ? '20px' : '14px';
 
   return (
     <div
@@ -66,16 +72,16 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
         }}
       />
 
-      {/* 캐릭터 이미지 - 상반신만 보이도록 확대 및 위치 조정 */}
+      {/* 캐릭터 이미지 - zoomMode에 따라 스타일 변경 */}
       <img
         src={charImagePath}
         alt={config.name}
         style={{
           position: 'absolute',
-          bottom: '-180px', // 상반신만 보이도록 위치 조정
+          bottom: charImageBottom, // 동적 bottom
           left: '50%',
-          transform: 'translateX(-50%)',
-          height: '150%', // 확대하여 상반신만 보이게 함
+          transform: 'translateX(-50%)', // scale 추가는 일단 보류
+          height: charImageHeight, // 동적 height
           objectFit: 'contain',
           display: 'block',
         }}
@@ -140,7 +146,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
         }}
       />
       
-      {/* 캐릭터 이름 영역 - 아웃라인 추가 */}
+      {/* 캐릭터 이름 영역 - zoomMode에 따라 스타일 변경 */}
       <div
         style={{
           position: 'absolute',
@@ -200,7 +206,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
           left: textPadding,
           right: textPadding,
           color: 'white',
-          fontSize: '14px',
+          fontSize: messageFontSize, // 동적 fontSize
           lineHeight: 1.4,
           display: 'flex',
           flexDirection: 'column',

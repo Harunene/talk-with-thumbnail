@@ -2,6 +2,7 @@ import { ImageResponse } from '@vercel/og'
 import { NextRequest } from 'next/server'
 import Preview, { ImageType } from '@/components/Preview'
 import { commonImageResponse } from '@/lib/commonImageResponse'
+import { getBaseUrlFromRequest } from '@/lib/getBaseUrl'
 
 export const runtime = "edge"
 
@@ -14,10 +15,9 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const imageType = searchParams.get('type') as ImageType || 'sana_stare';
   const subType = searchParams.get('subType') || '';
+  const zoomMode = searchParams.get('zoom') === 'true';
 
-  const origin = req.headers.get('host') || 'localhost:3000'
-  const protocol = origin.includes('localhost') ? 'http' : 'https'
-  const baseUrl = `${protocol}://${origin}`
+  const baseUrl = getBaseUrlFromRequest(req)
 
-  return commonImageResponse(baseUrl, defaultMessage, imageType, subType)
+  return commonImageResponse(baseUrl, defaultMessage, imageType, subType, zoomMode)
 } 

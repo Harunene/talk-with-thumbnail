@@ -3,10 +3,10 @@ import { getMessageData } from '@/lib/blob';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
     
     // 메시지 데이터 조회
     const messageData = await getMessageData(id);

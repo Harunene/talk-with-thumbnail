@@ -1,5 +1,6 @@
 import Home from '@/components/Home'
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 
 export function generateMetadata(): Metadata {
   // 프로덕션 도메인 설정
@@ -26,7 +27,12 @@ export function generateMetadata(): Metadata {
 }
 
 export default function Page() {
+  // 로딩 상태를 보여줄 간단한 fallback UI
+  const LoadingFallback = () => <div>Loading...</div>
+
   return (
-    <Home />
+    <Suspense fallback={<LoadingFallback />}>
+      <Home />
+    </Suspense>
   )
 }

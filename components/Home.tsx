@@ -29,14 +29,11 @@ import type { ImageType } from "@/components/Preview";
 import { RadioGroup, RadioGroupItem } from "@radix-ui/react-radio-group";
 import ImageRadioItem from "@/components/ImageRadioItem";
 import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // ImageType의 모든 가능한 값을 배열로 정의
 const IMAGE_TYPES: ImageType[] = [
   'sana_stare',
-  'sana_dizzy',
-  'cat_lick',
-  'cat_scared',
-  'ichihime',
   'sans',
   'hikari',
   'nozomi'
@@ -87,6 +84,7 @@ export default function Home({ messageId = '' }: HomeProps) {
       ])
     ) as Record<ImageType, string>;
   });
+  const [zoomMode, setZoomMode] = useState(false);
   
   // 경로 매개변수나 쿼리 매개변수에서 메시지 가져오기
   useEffect(() => {
@@ -108,10 +106,14 @@ export default function Home({ messageId = '' }: HomeProps) {
               [data.imageType]: data.subType
             }));
           }
+          if (data.zoomMode !== undefined) {
+            setZoomMode(data.zoomMode);
+          }
         })
         .catch(err => {
           console.error('메시지 조회 실패:', err);
           setUserMessage('');
+          setZoomMode(false);
         });
     }
   }, [messageId]);
@@ -120,8 +122,8 @@ export default function Home({ messageId = '' }: HomeProps) {
   const encodedMessage = encodeURIComponent(userMessage || '');
   // 메시지가 비어있으면 기본 경로 사용
   const ogImageUrl = userMessage.trim() 
-    ? `/api/og/${encodedMessage}?type=${imageType}&subType=${subType}` 
-    : `/api/og/?type=${imageType}&subType=${subType}`;
+    ? `/api/og/${encodedMessage}?type=${imageType}&subType=${subType}&zoom=${zoomMode}` 
+    : `/api/og/?type=${imageType}&subType=${subType}&zoom=${zoomMode}`;
 
   // 공유 처리 함수
   const handleShare = async () => {
@@ -147,7 +149,8 @@ export default function Home({ messageId = '' }: HomeProps) {
           body: JSON.stringify({ 
             message: userMessage,
             imageType: imageType,
-            subType: subType // 모든 이미지 타입에 대해 subType 전송
+            subType: subType,
+            zoomMode: zoomMode
           }),
         });
         
@@ -167,7 +170,7 @@ export default function Home({ messageId = '' }: HomeProps) {
         title: "클립보드에 복사되었습니다!",
         description: "이 URL을 SNS에 공유해보세요.",
       });
-      router.push(`/${newId}`, { scroll: false, shallow: true });
+      router.push(`/${newId}`, { scroll: false });
 
       setCurrentId(newId);
 
@@ -201,6 +204,12 @@ export default function Home({ messageId = '' }: HomeProps) {
       ...prev,
       [imageType]: newSubType
     }));
+    if (currentId) setCurrentId('');
+  };
+  
+  // zoomMode 변경 시 ID 초기화
+  const handleZoomModeChange = (checked: boolean) => {
+    setZoomMode(checked);
     if (currentId) setCurrentId('');
   };
 
@@ -352,6 +361,23 @@ export default function Home({ messageId = '' }: HomeProps) {
                   <p className="text-xs text-muted-foreground">
                     {BLUE_ARCHIVE_CHARACTERS[imageType as 'hikari' | 'nozomi'].name}의 다양한 표정을 선택해보세요.
                   </p>
+                </div>
+              )}
+
+              {/* 크기 확대 체크박스 UI 추가 */}
+              {isBlueArchiveCharacter(imageType) && (
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="zoom-mode"
+                    checked={zoomMode}
+                    onCheckedChange={handleZoomModeChange}
+                  />
+                  <Label
+                    htmlFor="zoom-mode"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    크기 확대
+                  </Label>
                 </div>
               )}
 

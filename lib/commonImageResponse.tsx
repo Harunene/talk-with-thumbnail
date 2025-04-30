@@ -16,11 +16,20 @@ const loadFonts = async (baseUrl: string, imageType: ImageType): Promise<FontOpt
   const isSans = imageType === 'sans';
   const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi';
 
+  const fetchFont = async (fontFileName: string): Promise<ArrayBuffer> => {
+    const fontUrl = new URL(`/fonts/${fontFileName}`, baseUrl).toString();
+    const response = await fetch(fontUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch font: ${fontUrl}, status: ${response.status}`);
+    }
+    return response.arrayBuffer();
+  };
+
   if (isSans) {
     return [
       {
         name: 'DungGeunMo',
-        data: await fetch(new URL(`${baseUrl}/fonts/DungGeunMo.otf`, import.meta.url)).then(res => res.arrayBuffer()),
+        data: await fetchFont('DungGeunMo.otf'),
         style: 'normal',
       },
     ];
@@ -30,7 +39,7 @@ const loadFonts = async (baseUrl: string, imageType: ImageType): Promise<FontOpt
     return [
       {
         name: 'Gyeonggi Medium',
-        data: await fetch(new URL(`${baseUrl}/fonts/gyeonggi_medium.otf`, import.meta.url)).then(res => res.arrayBuffer()),
+        data: await fetchFont('gyeonggi_medium.otf'),
         style: 'normal',
       },
     ];
@@ -43,11 +52,11 @@ export const commonImageResponse = async (
   baseUrl: string, 
   message: string, 
   imageType: ImageType,
-  subType?: string
+  subType?: string,
+  zoomMode?: boolean
 ) => {
   try {
     
-    const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi';
     const fonts = await loadFonts(baseUrl, imageType);
 
     return new ImageResponse(
@@ -57,6 +66,7 @@ export const commonImageResponse = async (
           imageBaseUrl={baseUrl} 
           imageType={imageType} 
           subType={subType}
+          zoomMode={zoomMode}
         />
       ),
       {
