@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { Share2Icon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import { Share2Icon, TwitterLogoIcon, ReloadIcon } from '@radix-ui/react-icons';
 import Image from "next/image";
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -85,6 +85,7 @@ export default function Home({ messageId = '' }: HomeProps) {
     ) as Record<ImageType, string>;
   });
   const [zoomMode, setZoomMode] = useState(false);
+  const [isPreviewLoading, setIsPreviewLoading] = useState(true);
   
   // 경로 매개변수나 쿼리 매개변수에서 메시지 가져오기
   useEffect(() => {
@@ -294,6 +295,11 @@ export default function Home({ messageId = '' }: HomeProps) {
 
   const throttledImageUrl = useThrottle(ogImageUrl, 500);
 
+  // 이미지 URL이 바뀌면 로딩 시작
+  useEffect(() => {
+    setIsPreviewLoading(true);
+  }, [throttledImageUrl]);
+
   return (
     <>
       <div className="flex h-screen">
@@ -316,7 +322,14 @@ export default function Home({ messageId = '' }: HomeProps) {
                       unoptimized={true}
                       alt="미리보기"
                       sizes="350px"
+                      onLoadingComplete={() => setIsPreviewLoading(false)}
+                      onError={() => setIsPreviewLoading(false)}
                     />
+                    {isPreviewLoading && (
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-10">
+                        <ReloadIcon className="h-6 w-6 text-white animate-spin" />
+                      </div>
+                    )}
                   </div>
                 </Card>
               </div>
