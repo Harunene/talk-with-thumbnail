@@ -43,6 +43,7 @@ export async function storeMessage(data: MessageData): Promise<string> {
   const blob = await put(fileName, JSON.stringify(messageData), {
     contentType: 'application/json',
     access: 'public',
+    addRandomSuffix: false,
   });
   
   return id;
