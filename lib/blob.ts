@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { put, list } from '@vercel/blob';
+import { put, head } from '@vercel/blob';
 import crypto from 'crypto';
 
 // 메시지를 위한 기본 경로
@@ -51,23 +51,17 @@ export async function storeMessage(data: MessageData): Promise<string> {
 // ID로 메시지 데이터 조회 함수
 export async function getMessageData(id: string): Promise<MessageData | null> {
   try {
-    // ID에 해당하는 파일 찾기
-    const { blobs } = await list({
-      prefix: `${MESSAGE_PATH}/${id}`,
-    });
-    
-    // 파일이 없으면 null 반환
-    if (blobs.length === 0) {
-      console.log(`ID로 시작하는 메시지를 찾을 수 없음: ${id}`);
+    // 정확한 파일 경로로 단건 조회
+    const fileName = `${MESSAGE_PATH}/${id}.json`;
+    let info;
+    try {
+      info = await head(fileName);
+    } catch (_) {
+      // 존재하지 않는 경우 등
       return null;
     }
-    
-    // 첫 번째 일치하는 파일 사용
-    const blob = blobs[0];
-    console.log(`메시지 파일 찾음: ${blob.pathname}`);
-    
-    // 파일 내용 조회
-    const response = await fetch(blob.url);
+
+    const response = await fetch(info.downloadUrl || info.url);
     if (!response.ok) {
       console.error(`파일 조회 실패: ${response.status} ${response.statusText}`);
       return null;
@@ -87,32 +81,3 @@ export async function getMessage(id: string): Promise<string | null> {
   const data = await getMessageData(id);
   return data ? data.message : null;
 }
-
-// 이미 존재하는 메시지의 ID 찾기
-export async function getExistingMessageId(message: string): Promise<string | null> {
-  // Blob에서는 이 기능을 효율적으로 구현하기 어려움
-  // 단순 구현만 제공 (실제로는 많은 메시지가 있을 경우 비효율적)
-  try {
-    const { blobs } = await list({ prefix: MESSAGE_PATH });
-    
-    for (const blob of blobs) {
-      const response = await fetch(blob.url);
-      const content = await response.text();
-      
-      if (content === message) {
-        // 파일 이름에서 ID 추출 (messages/ID.txt 형식)
-        const fileName = blob.pathname.split('/').pop() || '';
-        // ID 추출 (패턴 매칭으로 처리)
-        const idMatch = fileName.match(/^([a-zA-Z0-9_-]{8})/);
-        if (idMatch) {
-          return idMatch[1];
-        }
-      }
-    }
-    
-    return null;
-  } catch (error) {
-    console.error('메시지 검색 실패:', error);
-    return null;
-  }
-} 
