@@ -96,6 +96,8 @@ export default function DashboardPage() {
         return '/images/cat_lick.png';
       case 'cat_scared':
         return '/images/cat_scared.png';
+      case 'aris':
+        return '/images/aris.png';
       default:
         return '/favicon.ico';
     }

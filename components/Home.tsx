@@ -36,7 +36,8 @@ const IMAGE_TYPES: ImageType[] = [
   'sana_stare',
   'sans',
   'hikari',
-  'nozomi'
+  'nozomi',
+  'aris',
 ];
 
 // 블루 아카이브 캐릭터 정보
@@ -50,12 +51,17 @@ const BLUE_ARCHIVE_CHARACTERS = {
     name: '노조미',
     maxSubTypes: 21,
     lastSubType: '001'
+  },
+  aris: {
+    name: '아리스',
+    maxSubTypes: 14,
+    lastSubType: '001'
   }
 };
 
 // 블루 아카이브 캐릭터인지 확인하는 함수
 const isBlueArchiveCharacter = (type: ImageType): boolean => {
-  return type === 'hikari' || type === 'nozomi';
+  return type === 'hikari' || type === 'nozomi' || type === 'aris';
 };
 
 interface HomeProps {
@@ -338,7 +344,7 @@ export default function Home({ messageId = '' }: HomeProps) {
                 <RadioGroup
                   onValueChange={handleImageTypeChange}
                   defaultValue={imageType}
-                  className="grid grid-cols-4 gap-4"
+                  className="grid grid-cols-5 gap-3"
                   value={imageType}
                 >
                   {IMAGE_TYPES.map((type) => (

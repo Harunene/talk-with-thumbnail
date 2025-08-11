@@ -40,13 +40,11 @@ characterFolders.forEach(characterFolder => {
     const inputPath = path.join(characterPath, imageFile);
     const outputPath = path.join(outputCharacterPath, imageFile);
     
-    // 이미지 크기 줄이기 (1/10)
+    // 결과 이미지를 세로 768px로 리사이즈 (비율 유지, 업스케일 금지)
     sharp(inputPath)
       .resize({ 
-        width: Math.round(4160 / 10), // 원본 너비의 1/10
-        height: Math.round(7680 / 10), // 원본 높이의 1/10
-        fit: 'contain',
-        background: { r: 0, g: 0, b: 0, alpha: 0 } // 투명 배경
+        height: 768,
+        withoutEnlargement: true
       })
       .toFile(outputPath)
       .then(() => {

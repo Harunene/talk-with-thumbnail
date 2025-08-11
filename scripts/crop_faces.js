@@ -2,7 +2,7 @@ import sharp from 'sharp';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const CHARACTERS = ['hikari', 'nozomi'];
+const CHARACTERS = ['hikari', 'nozomi', 'aris'];
 const SOURCE_DIR = 'public/images/bluearchive/char_small';
 const TARGET_DIR = 'public/images/bluearchive/char_face';
 
@@ -17,6 +17,12 @@ const CROP_CONFIG = {
   nozomi: {
     left: 145,
     top: 108,
+    width: 100,
+    height: 100
+  },
+  aris: {
+    left: 292,
+    top: 80,
     width: 100,
     height: 100
   }

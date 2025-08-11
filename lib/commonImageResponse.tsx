@@ -14,7 +14,7 @@ interface FontOptions {
 
 const loadFonts = async (baseUrl: string, imageType: ImageType): Promise<FontOptions[] | undefined> => {
   const isSans = imageType === 'sans';
-  const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi';
+  const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi' || imageType === 'aris';
 
   const fetchFont = async (fontFileName: string): Promise<ArrayBuffer> => {
     const fontUrl = new URL(`/fonts/${fontFileName}`, baseUrl).toString();

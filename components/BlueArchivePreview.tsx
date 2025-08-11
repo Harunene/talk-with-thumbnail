@@ -10,12 +10,21 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
       nameColor: '#FFFFFF', // 흰색으로 변경
       textColor: '#FFFFFF',
       maxSubTypes: 18, // 히카리의 최대 이미지 인덱스
+      bg: 'abydos-desert.jpg'
     },
     nozomi: {
       name: '노조미',
       nameColor: '#FFFFFF', // 흰색으로 변경
       textColor: '#FFFFFF',
       maxSubTypes: 21, // 노조미의 최대 이미지 인덱스
+      bg: 'abydos-desert.jpg'
+    },
+    aris: {
+      name: '아리스',
+      nameColor: '#FFFFFF',
+      textColor: '#FFFFFF',
+      maxSubTypes: 14,
+      bg: 'gamedev.jpg'
     }
   };
   
@@ -27,7 +36,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
     : '001';
   
   // 이미지 경로 설정
-  const bgImagePath = `${imageBaseUrl}/images/bluearchive/bg.jpg`;
+  const bgImagePath = `${imageBaseUrl}/images/bluearchive/bg/${config.bg}`;
   const charImagePath = `${imageBaseUrl}/images/bluearchive/char_small/${imageType}/up_${imageType}_${validSubType}.png`;
 
   // 어두운 군청색 (아웃라인 및 글로우 효과용)
