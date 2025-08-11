@@ -10,25 +10,28 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
       nameColor: '#FFFFFF', // 흰색으로 변경
       textColor: '#FFFFFF',
       maxSubTypes: 18, // 히카리의 최대 이미지 인덱스
-      bg: 'abydos-desert.jpg'
+      bg: 'abydos-desert.jpg',
+      affiliation: 'CCC'
     },
     nozomi: {
       name: '노조미',
       nameColor: '#FFFFFF', // 흰색으로 변경
       textColor: '#FFFFFF',
       maxSubTypes: 21, // 노조미의 최대 이미지 인덱스
-      bg: 'abydos-desert.jpg'
+      bg: 'abydos-desert.jpg',
+      affiliation: 'CCC'
     },
     aris: {
       name: '아리스',
       nameColor: '#FFFFFF',
       textColor: '#FFFFFF',
       maxSubTypes: 14,
-      bg: 'gamedev.jpg'
+      bg: 'gamedev.jpg',
+      affiliation: '게임개발부'
     }
   };
   
-  const config = characterConfig[imageType as 'hikari' | 'nozomi'];
+  const config = characterConfig[imageType as 'hikari' | 'nozomi' | 'aris'];
   
   // subType 유효성 검사 (비어있거나 범위를 벗어나면 001로 설정)
   const validSubType = (subType && /^\d{3}$/.test(subType) && Number(subType) > 0 && Number(subType) <= config.maxSubTypes) 
@@ -46,7 +49,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
 
   const dialogBackgroundColor = (opacity: number) => `rgba(12, 17, 29, ${opacity})`;
 
-  console.log(zoomMode);
+  // console.log(zoomMode);
 
   // --- 스타일 변수 --- 
   const charImageHeight = zoomMode ? '200%' : '150%'; // 확대 시 높이 증가
@@ -187,7 +190,7 @@ function BlueArchivePreview({ message, imageBaseUrl = '', imageType = 'hikari', 
             textShadow: `-1px -1px 0 ${darkNavyBlue}, 1px -1px 0 ${darkNavyBlue}, -1px 1px 0 ${darkNavyBlue}, 1px 1px 0 ${darkNavyBlue}`,
           }}
         >
-          CCC
+          {config.affiliation}
         </span>
       </div>
       
