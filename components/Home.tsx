@@ -11,6 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import type { MessageData } from "@/lib/blob";
 import {
   CHARACTER_IDS,
   CHARACTERS,
@@ -18,6 +19,7 @@ import {
   type CharacterId,
 } from "@/lib/characters";
 import { resolveBackgroundId } from "@/lib/backgrounds";
+import { createEditorInitialState } from "@/lib/initialEditorState";
 import { cn } from "@/lib/utils";
 import { useThrottle } from '@/lib/useThrottle.js';
 import { Share2Icon, TwitterLogoIcon } from '@radix-ui/react-icons';
@@ -28,73 +30,30 @@ import { useEffect, useRef, useState } from 'react';
 
 interface HomeProps {
   messageId?: string;
+  initialData?: MessageData | null;
 }
 
-export default function Home({ messageId = '' }: HomeProps) {
+export default function Home({ messageId = '', initialData = null }: HomeProps) {
   const { toast } = useToast();
   const router = useRouter();
+  const initialState = createEditorInitialState(messageId, initialData);
 
-  const [userMessage, setUserMessage] = useState('');
+  const [userMessage, setUserMessage] = useState(initialState.userMessage);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentId, setCurrentId] = useState(messageId);
-  const [imageType, setImageType] = useState<CharacterId>('hikari');
-  const [subType, setSubType] = useState(CHARACTERS.hikari.defaultExpression);
-  const [backgroundId, setBackgroundId] = useState(CHARACTERS.hikari.defaultBackgroundId);
-  const [lastSubTypes, setLastSubTypes] = useState<Record<CharacterId, string>>(() =>
-    Object.fromEntries(
-      CHARACTER_IDS.map((id) => [id, CHARACTERS[id].defaultExpression])
-    ) as Record<CharacterId, string>
+  const [currentId, setCurrentId] = useState(initialState.currentId);
+  const [imageType, setImageType] = useState<CharacterId>(initialState.imageType);
+  const [subType, setSubType] = useState(initialState.subType);
+  const [backgroundId, setBackgroundId] = useState(initialState.backgroundId);
+  const [lastSubTypes, setLastSubTypes] = useState<Record<CharacterId, string>>(
+    initialState.lastSubTypes,
   );
-  const [lastBackgroundIds, setLastBackgroundIds] = useState<Record<CharacterId, string>>(() =>
-    Object.fromEntries(
-      CHARACTER_IDS.map((id) => [id, CHARACTERS[id].defaultBackgroundId])
-    ) as Record<CharacterId, string>
+  const [lastBackgroundIds, setLastBackgroundIds] = useState<Record<CharacterId, string>>(
+    initialState.lastBackgroundIds,
   );
-  const [zoomMode, setZoomMode] = useState(false);
+  const [zoomMode, setZoomMode] = useState(initialState.zoomMode);
   const [isPreviewLoading, setIsPreviewLoading] = useState(true);
   const [isPreviewStuck, setIsPreviewStuck] = useState(false);
   const previewSentinelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!messageId) return;
-
-    fetch(`/api/message/${messageId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.message) {
-          setUserMessage(data.message);
-        }
-        if (data.imageType && isCharacterId(data.imageType)) {
-          setImageType(data.imageType);
-        }
-        if (data.subType) {
-          setSubType(data.subType);
-          if (isCharacterId(data.imageType)) {
-            setLastSubTypes(prev => ({
-              ...prev,
-              [data.imageType]: data.subType
-            }));
-          }
-        }
-        if (data.backgroundId) {
-          setBackgroundId(data.backgroundId);
-          if (isCharacterId(data.imageType)) {
-            setLastBackgroundIds(prev => ({
-              ...prev,
-              [data.imageType]: data.backgroundId
-            }));
-          }
-        }
-        if (data.zoomMode !== undefined) {
-          setZoomMode(data.zoomMode);
-        }
-      })
-      .catch(err => {
-        console.error('메시지 조회 실패:', err);
-        setUserMessage('');
-        setZoomMode(false);
-      });
-  }, [messageId]);
 
   useEffect(() => {
     const sentinel = previewSentinelRef.current;

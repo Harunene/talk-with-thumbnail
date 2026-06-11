@@ -4,7 +4,7 @@ import { getMessageData } from '@/lib/blob'
 import { isCharacterId } from '@/lib/characters'
 import { buildOgImageUrl, buildShareMetadata, getSiteHost } from '@/lib/metadata'
 import { headers } from 'next/headers'
-import { Suspense } from 'react'
+import { notFound } from 'next/navigation'
 
 type Props = {
   params: Promise<{ id: string }>
@@ -38,12 +38,11 @@ export async function generateMetadata(
 
 export default async function Page(props: Props) {
   const { id } = await props.params
+  const messageData = await getMessageData(id)
 
-  const LoadingFallback = () => <div>Loading...</div>;
+  if (!messageData) {
+    notFound()
+  }
 
-  return (
-    <Suspense fallback={<LoadingFallback />}>
-      <Home messageId={id} />
-    </Suspense>
-  )
+  return <Home key={id} messageId={id} initialData={messageData} />
 }
