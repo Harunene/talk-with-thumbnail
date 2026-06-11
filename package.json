@@ -29,6 +29,8 @@
     "lucide-react": "^0.476.0",
     "nanoid": "^5.1.5",
     "next": "15.5.18",
+    "posthog-js": "^1.386.4",
+    "posthog-node": "^5.36.17",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-wordcloud": "^1.2.7",
