@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import type { Options as WordCloudOptions } from 'react-wordcloud/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CHARACTERS, getCharacterFacePath, isCharacterId } from '@/lib/characters';
 import { Loader2 } from 'lucide-react';
 
 const ReactWordcloud = dynamic(() => import('react-wordcloud'), { ssr: false });
@@ -79,8 +80,8 @@ export default function DashboardPage() {
   }));
 
   const getTypeImageUrl = (imageType: string): string => {
-    if (imageType === 'hikari' || imageType === 'nozomi' || imageType === 'aris') {
-      return `/images/${imageType}.png`;
+    if (isCharacterId(imageType)) {
+      return getCharacterFacePath(imageType, CHARACTERS[imageType].defaultExpression);
     }
     return '/favicon.ico';
   };
