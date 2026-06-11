@@ -13,7 +13,7 @@ export default function BackgroundPicker({ value, onChange }: BackgroundPickerPr
   return (
     <div className="grid gap-2">
       <span className="text-sm font-medium leading-none">배경 선택</span>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 max-h-72 overflow-y-auto rounded-md border p-2 bg-muted/20">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 rounded-md border p-2 bg-muted/20">
         {BACKGROUNDS.map((background) => {
           const isSelected = value === background.id;
 
@@ -25,9 +25,9 @@ export default function BackgroundPicker({ value, onChange }: BackgroundPickerPr
               aria-pressed={isSelected}
               onClick={() => onChange(background.id)}
               className={cn(
-                'group relative w-full aspect-[16/9] overflow-hidden rounded-lg border-2 bg-muted transition-colors',
+                'group relative h-[72px] w-full shrink-0 overflow-hidden rounded-lg border-2 bg-muted transition-colors',
                 isSelected
-                  ? 'border-primary ring-2 ring-inset ring-primary/40 z-10'
+                  ? 'border-primary ring-2 ring-inset ring-primary/40'
                   : 'border-transparent hover:border-accent'
               )}
             >
@@ -35,7 +35,7 @@ export default function BackgroundPicker({ value, onChange }: BackgroundPickerPr
                 src={getBackgroundPath(background.id)}
                 alt={background.name}
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 sizes="(max-width: 768px) 45vw, 180px"
               />
               <span className="absolute inset-x-0 bottom-0 bg-black/65 px-2 py-1 text-[11px] text-white truncate">

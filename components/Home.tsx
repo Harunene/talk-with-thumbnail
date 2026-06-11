@@ -7,10 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -22,12 +18,13 @@ import {
   type CharacterId,
 } from "@/lib/characters";
 import { resolveBackgroundId } from "@/lib/backgrounds";
+import { cn } from "@/lib/utils";
 import { useThrottle } from '@/lib/useThrottle.js';
 import { Share2Icon, TwitterLogoIcon } from '@radix-ui/react-icons';
 import { RadioGroup } from "@radix-ui/react-radio-group";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface HomeProps {
   messageId?: string;
@@ -55,6 +52,8 @@ export default function Home({ messageId = '' }: HomeProps) {
   );
   const [zoomMode, setZoomMode] = useState(false);
   const [isPreviewLoading, setIsPreviewLoading] = useState(true);
+  const [isPreviewStuck, setIsPreviewStuck] = useState(false);
+  const previewSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!messageId) return;
@@ -96,6 +95,38 @@ export default function Home({ messageId = '' }: HomeProps) {
         setZoomMode(false);
       });
   }, [messageId]);
+
+  useEffect(() => {
+    const sentinel = previewSentinelRef.current;
+    if (!sentinel) return;
+
+    const getRootMargin = () => {
+      const topOffset = window.matchMedia('(min-width: 1024px)').matches ? 24 : 16;
+      return `-${topOffset}px 0px 0px 0px`;
+    };
+
+    let observer = new IntersectionObserver(
+      ([entry]) => setIsPreviewStuck(!entry.isIntersecting),
+      { threshold: [0], rootMargin: getRootMargin() },
+    );
+    observer.observe(sentinel);
+
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const handleViewportChange = () => {
+      observer.disconnect();
+      observer = new IntersectionObserver(
+        ([entry]) => setIsPreviewStuck(!entry.isIntersecting),
+        { threshold: [0], rootMargin: getRootMargin() },
+      );
+      observer.observe(sentinel);
+    };
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
 
   const resetShareId = () => {
     if (currentId) setCurrentId('');
@@ -263,21 +294,29 @@ export default function Home({ messageId = '' }: HomeProps) {
 
   return (
     <div className="min-h-screen bg-muted/20">
-      <div className="mx-auto w-full max-w-[1400px] px-4 py-6 lg:px-8 lg:py-8">
-        <header className="mb-6 lg:mb-8">
+      <div className="mx-auto w-full max-w-[1400px] py-6 lg:py-8">
+        <header className="mb-6 px-4 lg:mb-8 lg:px-8">
           <h1 className="text-2xl font-semibold tracking-tight">말풍선 썸네일 생성기</h1>
           <p className="text-sm text-muted-foreground mt-1">
             블루 아카이브 스타일로 말풍선 썸네일을 만들어보세요. (나쁜말 금지!)
           </p>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[3fr_7fr] lg:items-start lg:gap-8">
-          <Card className="lg:sticky lg:top-6 lg:self-start h-fit w-full">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">미리보기</CardTitle>
-              <CardDescription>썸네일 위에서 바로 메시지를 입력하세요.</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[3fr_7fr] lg:items-stretch lg:gap-10">
+          <div className="contents lg:block lg:h-full lg:pl-8">
+            <div
+              ref={previewSentinelRef}
+              className="pointer-events-none h-px w-full px-4 lg:px-0"
+              aria-hidden
+            />
+            <div
+              className={cn(
+                'sticky top-4 z-20 w-full space-y-4 rounded-md px-4 py-1 transition-[background-color,box-shadow] duration-200 lg:top-6 lg:px-0',
+                isPreviewStuck
+                  ? 'bg-white pb-3 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.12),0_6px_12px_-2px_rgba(0,0,0,0.08)]'
+                  : 'bg-transparent shadow-none',
+              )}
+            >
               <PreviewEditor
                 imageUrl={throttledEditorImageUrl}
                 value={userMessage}
@@ -286,76 +325,75 @@ export default function Home({ messageId = '' }: HomeProps) {
                 isLoading={isPreviewLoading}
                 onImageLoad={() => setIsPreviewLoading(false)}
               />
-            </CardContent>
-            <CardFooter className="flex flex-col gap-2 sm:flex-row">
-              <Button
-                className="w-full sm:flex-1"
-                onClick={handleShare}
-                disabled={isLoading}
-              >
-                <Share2Icon className="mr-2 h-4 w-4" />
-                {isLoading ? "처리 중..." : "링크 복사하기"}
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full sm:flex-1"
-                disabled={isLoading || !currentId}
-                onClick={handleShareButtonClick}
-              >
-                <TwitterLogoIcon className="mr-2 h-4 w-4" /> 트위터에 공유하기
-              </Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">설정</CardTitle>
-              <CardDescription>캐릭터, 표정, 배경을 선택하세요.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-2">
-                <Label htmlFor="image-type">캐릭터</Label>
-                <RadioGroup
-                  onValueChange={handleImageTypeChange}
-                  className="flex flex-wrap gap-2"
-                  value={imageType}
+              <div className="flex flex-row gap-2">
+                <Button
+                  className="flex-1"
+                  onClick={handleShare}
+                  disabled={isLoading}
                 >
-                  {CHARACTER_IDS.map((type) => (
-                    <ImageRadioItem
-                      key={type}
-                      value={type}
-                      subType={lastSubTypes[type]}
-                    />
-                  ))}
-                </RadioGroup>
+                  <Share2Icon className="mr-2 h-4 w-4" />
+                  {isLoading ? "처리 중..." : "링크 복사하기"}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  disabled={isLoading || !currentId}
+                  onClick={handleShareButtonClick}
+                >
+                  <TwitterLogoIcon className="mr-2 h-4 w-4" /> 트위터에 공유하기
+                </Button>
               </div>
+            </div>
+          </div>
 
-              <ExpressionPicker
-                characterId={imageType}
-                value={subType}
-                onChange={handleSubTypeChange}
-              />
+          <Card className="mx-4 sm:mx-6 lg:mx-8 lg:mr-8">
+            <CardContent className="space-y-6 pt-6">
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+                <div className="grid min-w-0 shrink gap-3">
+                  <Label htmlFor="image-type">캐릭터</Label>
+                  <RadioGroup
+                    onValueChange={handleImageTypeChange}
+                    className="flex flex-wrap gap-2"
+                    value={imageType}
+                  >
+                    {CHARACTER_IDS.map((type) => (
+                      <ImageRadioItem
+                        key={type}
+                        value={type}
+                        subType={lastSubTypes[type]}
+                      />
+                    ))}
+                  </RadioGroup>
+                  <div className="flex items-center space-x-2 pt-1">
+                    <Checkbox
+                      id="zoom-mode"
+                      checked={zoomMode}
+                      onCheckedChange={handleZoomModeChange}
+                    />
+                    <Label htmlFor="zoom-mode" className="text-sm font-medium leading-none">
+                      크기 확대
+                    </Label>
+                  </div>
+                </div>
+
+                <div className="min-w-0 flex-1 shrink-0 lg:min-w-[280px]">
+                  <ExpressionPicker
+                    characterId={imageType}
+                    value={subType}
+                    onChange={handleSubTypeChange}
+                  />
+                </div>
+              </div>
 
               <BackgroundPicker
                 value={resolveBackgroundId(backgroundId, CHARACTERS[imageType].defaultBackgroundId)}
                 onChange={handleBackgroundChange}
               />
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="zoom-mode"
-                  checked={zoomMode}
-                  onCheckedChange={handleZoomModeChange}
-                />
-                <Label htmlFor="zoom-mode" className="text-sm font-medium leading-none">
-                  크기 확대
-                </Label>
-              </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="flex justify-center items-center text-sm space-x-2 text-muted-foreground mt-6">
+        <div className="flex justify-center items-center text-sm space-x-2 text-muted-foreground mt-6 px-4">
           <TwitterLogoIcon />
           &nbsp;or 𝕏 :
           <Link href="https://twitter.com/harunene">@harunene</Link>

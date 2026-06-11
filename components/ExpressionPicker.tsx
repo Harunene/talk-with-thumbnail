@@ -10,6 +10,8 @@ import {
   type CharacterId,
 } from '@/lib/characters';
 
+const EXPRESSION_ICON_SIZE = 56;
+
 interface ExpressionPickerProps {
   characterId: CharacterId;
   value: string;
@@ -22,13 +24,13 @@ export default function ExpressionPicker({ characterId, value, onChange }: Expre
 
   return (
     <div className="grid gap-2">
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium leading-none">{character.name} 표정</span>
-        <span className="text-xs text-muted-foreground">
+      <div className="flex justify-between items-center gap-2">
+        <span className="text-sm font-medium leading-none">표정</span>
+        <span className="text-xs text-muted-foreground shrink-0">
           {Number.parseInt(value || character.defaultExpression, 10)} / {character.maxExpressions}
         </span>
       </div>
-      <div className="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-2 max-h-56 overflow-y-auto rounded-md border p-2 bg-muted/20">
+      <div className="flex flex-wrap gap-2 rounded-md border p-2 bg-muted/20">
         {expressions.map((num) => {
           const expression = formatExpression(num);
           const isSelected = value === expression;
@@ -41,18 +43,19 @@ export default function ExpressionPicker({ characterId, value, onChange }: Expre
               aria-pressed={isSelected}
               onClick={() => onChange(expression)}
               className={cn(
-                'relative aspect-square overflow-hidden rounded-lg border-2 bg-muted transition-colors',
+                'relative shrink-0 overflow-hidden rounded-lg bg-muted transition-colors',
                 isSelected
-                  ? 'border-primary ring-2 ring-inset ring-primary/40 z-10'
-                  : 'border-transparent hover:border-accent'
+                  ? 'border-2 border-primary ring-2 ring-inset ring-primary/40'
+                  : 'border border-border/70 hover:opacity-80',
               )}
+              style={{ width: EXPRESSION_ICON_SIZE, height: EXPRESSION_ICON_SIZE }}
             >
               <Image
                 src={getCharacterFacePath(characterId, expression)}
                 alt={`${character.name} ${num}`}
-                fill
-                className="object-cover object-[center_15%] scale-110"
-                sizes="64px"
+                width={EXPRESSION_ICON_SIZE}
+                height={EXPRESSION_ICON_SIZE}
+                className="h-full w-full object-cover object-center"
               />
             </button>
           );

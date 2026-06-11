@@ -12,7 +12,7 @@ export default function ImageRadioItem({ value, subType = '001' }: ImageRadioIte
   const imagePath = getCharacterFacePath(value, subType);
 
   return (
-    <div className="relative shrink-0">
+    <div className="relative min-w-0 shrink">
       <RadioGroupItem
         value={value}
         id={value}

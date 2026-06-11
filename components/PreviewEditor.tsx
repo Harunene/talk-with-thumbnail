@@ -46,7 +46,7 @@ export default function PreviewEditor({
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[600/315] w-full overflow-hidden rounded-lg border bg-black/5"
+      className="relative aspect-[600/315] w-full overflow-hidden rounded-md"
     >
       <Image
         src={imageUrl}
