@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     // 요청 본문에서 데이터 추출
     const body = await request.json();
-    const { message, imageType, subType, zoomMode } = body;
+    const { message, imageType, subType, zoomMode, backgroundId } = body;
     
     // 메시지 검증
     if (!message || typeof message !== 'string' || message.trim() === '') {
@@ -23,14 +23,22 @@ export async function POST(request: NextRequest) {
       message: trimmedMessage,
       imageType: imageType || 'default',
       subType: subType || '',
-      zoomMode: zoomMode || false
+      zoomMode: zoomMode || false,
+      backgroundId: typeof backgroundId === 'string' ? backgroundId : undefined,
     };
     
     // Blob에 저장
     const id = await storeMessage(messageData);
     
     // 성공 응답
-    return NextResponse.json({ id, message: trimmedMessage, imageType: messageData.imageType, subType: messageData.subType, zoomMode: messageData.zoomMode });
+    return NextResponse.json({
+      id,
+      message: trimmedMessage,
+      imageType: messageData.imageType,
+      subType: messageData.subType,
+      zoomMode: messageData.zoomMode,
+      backgroundId: messageData.backgroundId,
+    });
   } catch (error) {
     console.error('메시지 저장 실패:', error);
     return NextResponse.json(
