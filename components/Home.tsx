@@ -2,6 +2,7 @@
 import BackgroundPicker from "@/components/BackgroundPicker";
 import ExpressionPicker from "@/components/ExpressionPicker";
 import ImageRadioItem from "@/components/ImageRadioItem";
+import PreviewEditor from "@/components/PreviewEditor";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import {
   CHARACTER_IDS,
@@ -23,9 +23,8 @@ import {
 } from "@/lib/characters";
 import { resolveBackgroundId } from "@/lib/backgrounds";
 import { useThrottle } from '@/lib/useThrottle.js';
-import { Share2Icon, TwitterLogoIcon, ReloadIcon } from '@radix-ui/react-icons';
+import { Share2Icon, TwitterLogoIcon } from '@radix-ui/react-icons';
 import { RadioGroup } from "@radix-ui/react-radio-group";
-import Image from "next/image";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -102,16 +101,14 @@ export default function Home({ messageId = '' }: HomeProps) {
     if (currentId) setCurrentId('');
   };
 
-  const encodedMessage = encodeURIComponent(userMessage || '');
-  const ogImageParams = new URLSearchParams({
+  const styleImageParams = new URLSearchParams({
     type: imageType,
     subType,
     zoom: String(zoomMode),
     bg: resolveBackgroundId(backgroundId, CHARACTERS[imageType].defaultBackgroundId),
+    nomsg: 'true',
   });
-  const ogImageUrl = userMessage.trim()
-    ? `/api/og/${encodedMessage}?${ogImageParams.toString()}`
-    : `/api/og/?${ogImageParams.toString()}`;
+  const editorImageUrl = `/api/og/?${styleImageParams.toString()}`;
 
   const handleShare = async () => {
     if (!userMessage.trim()) {
@@ -253,11 +250,16 @@ export default function Home({ messageId = '' }: HomeProps) {
     window.open(getTwitterShareUrl(), '_blank', 'noopener,noreferrer');
   };
 
-  const throttledImageUrl = useThrottle(ogImageUrl, 500);
+  const throttledEditorImageUrl = useThrottle(editorImageUrl, 500);
 
   useEffect(() => {
     setIsPreviewLoading(true);
-  }, [throttledImageUrl]);
+  }, [throttledEditorImageUrl]);
+
+  const handleMessageChange = (value: string) => {
+    setUserMessage(value);
+    resetShareId();
+  };
 
   return (
     <div className="min-h-screen bg-muted/20">
@@ -273,40 +275,17 @@ export default function Home({ messageId = '' }: HomeProps) {
           <Card className="lg:sticky lg:top-6 lg:self-start h-fit w-full">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg">미리보기</CardTitle>
-              <CardDescription>공유 시 SNS에 표시되는 썸네일입니다.</CardDescription>
+              <CardDescription>썸네일 위에서 바로 메시지를 입력하세요.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="relative aspect-[600/315] overflow-hidden rounded-lg border bg-black/5">
-                <Image
-                  src={throttledImageUrl}
-                  fill
-                  priority
-                  unoptimized={true}
-                  alt="미리보기"
-                  sizes="(max-width: 1024px) 100vw, 420px"
-                  onLoadingComplete={() => setIsPreviewLoading(false)}
-                  onError={() => setIsPreviewLoading(false)}
-                />
-                {isPreviewLoading && (
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-10">
-                    <ReloadIcon className="h-6 w-6 text-white animate-spin" />
-                  </div>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="message">하고싶은 말</Label>
-                <Textarea
-                  id="message"
-                  placeholder="말풍선에 표시할 메시지를 입력하세요"
-                  value={userMessage}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                    setUserMessage(e.target.value);
-                    resetShareId();
-                  }}
-                  className="resize-none min-h-24"
-                />
-              </div>
+            <CardContent>
+              <PreviewEditor
+                imageUrl={throttledEditorImageUrl}
+                value={userMessage}
+                onChange={handleMessageChange}
+                zoomMode={zoomMode}
+                isLoading={isPreviewLoading}
+                onImageLoad={() => setIsPreviewLoading(false)}
+              />
             </CardContent>
             <CardFooter className="flex flex-col gap-2 sm:flex-row">
               <Button
