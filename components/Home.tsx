@@ -1,4 +1,5 @@
 "use client";
+import posthog from "posthog-js";
 import BackgroundPicker from "@/components/BackgroundPicker";
 import ExpressionPicker from "@/components/ExpressionPicker";
 import ImageRadioItem from "@/components/ImageRadioItem";
@@ -96,6 +97,7 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-posthog-distinct-id': posthog.get_distinct_id(),
       },
       body: JSON.stringify({
         message: userMessage,
@@ -125,6 +127,11 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
       if (!newId) return;
 
       navigator.clipboard.writeText(getAbsoluteUrl(`/${newId}`));
+      posthog.capture('share_link_copied', {
+        message_id: newId,
+        image_type: imageType,
+        sub_type: subType,
+      });
       toast({
         title: "클립보드에 복사되었습니다!",
         description: "이 URL을 SNS에 공유해보세요.",
@@ -147,6 +154,7 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
     resetShareId();
     setSubType(lastSubTypes[value]);
     setBackgroundId(lastBackgroundIds[value]);
+    posthog.capture('character_selected', { character: value });
   };
 
   const handleSubTypeChange = (newSubType: string) => {
@@ -156,6 +164,7 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
       [imageType]: newSubType
     }));
     resetShareId();
+    posthog.capture('expression_selected', { character: imageType, expression: newSubType });
   };
 
   const handleBackgroundChange = (newBackgroundId: string) => {
@@ -165,6 +174,7 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
       [imageType]: newBackgroundId
     }));
     resetShareId();
+    posthog.capture('background_selected', { character: imageType, background_id: newBackgroundId });
   };
 
   const handleZoomModeChange = (checked: boolean) => {
@@ -198,6 +208,11 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
       if (!newId) return;
 
       const shareUrl = getShareUrlForId(newId);
+      posthog.capture('share_twitter_clicked', {
+        message_id: newId,
+        image_type: imageType,
+        sub_type: subType,
+      });
       window.open(
         `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
         '_blank',

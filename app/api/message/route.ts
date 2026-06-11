@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { storeMessage, type MessageData } from '@/lib/blob';
+import { getPostHogClient } from '@/lib/posthog-server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +30,21 @@ export async function POST(request: NextRequest) {
     
     // Blob에 저장
     const id = await storeMessage(messageData);
-    
+
+    const distinctId = request.headers.get('x-posthog-distinct-id') || id;
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId,
+      event: 'thumbnail_created',
+      properties: {
+        image_type: messageData.imageType,
+        sub_type: messageData.subType,
+        zoom_mode: messageData.zoomMode,
+        background_id: messageData.backgroundId,
+        message_length: trimmedMessage.length,
+      },
+    });
+
     // 성공 응답
     return NextResponse.json({
       id,
