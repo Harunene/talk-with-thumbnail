@@ -1,42 +1,38 @@
 import { RadioGroupItem } from "@/components/ui/radio-group";
-import { ImageType } from "@/components/Preview";
+import { CHARACTERS, getCharacterFacePath, type CharacterId } from "@/lib/characters";
 import Image from "next/image";
 
 interface ImageRadioItemProps {
-  value: string;
-  currentValue: string;
-  onChange: (value: string) => void;
+  value: CharacterId;
   subType?: string;
 }
 
-export default function ImageRadioItem({ value, currentValue, onChange, subType = '001' }: ImageRadioItemProps) {
-  const isBlueArchive = value === 'hikari' || value === 'nozomi' || value === 'aris';
-  const imagePath = isBlueArchive
-    ? `/images/bluearchive/char_face/${value}/up_${value}_${subType}.png`
-    : `/images/${value}.png`;
+export default function ImageRadioItem({ value, subType = '001' }: ImageRadioItemProps) {
+  const character = CHARACTERS[value];
+  const imagePath = getCharacterFacePath(value, subType);
 
   return (
-    <div className="relative">
+    <div className="relative shrink-0">
       <RadioGroupItem
         value={value}
         id={value}
         className="peer sr-only"
-        aria-label={value}
+        aria-label={character.name}
       />
       <label
         htmlFor={value}
-        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([aria-checked=true])]:border-primary"
-        style={{ padding: 4 }}
+        className="flex flex-col items-center gap-1 rounded-md border-2 border-muted bg-popover px-2 py-1.5 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([aria-checked=true])]:border-primary"
       >
-        <div className="relative w-full aspect-square">
+        <div className="relative h-12 w-12">
           <Image
             src={imagePath}
-            alt={value}
+            alt={character.name}
             fill
-            className="object-contain p-0.5"
-            sizes="72px"
+            className="object-contain"
+            sizes="48px"
           />
         </div>
+        <span className="text-[10px] text-muted-foreground leading-none">{character.name}</span>
       </label>
     </div>
   );

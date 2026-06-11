@@ -1,5 +1,5 @@
 import { ImageResponse } from '@vercel/og'
-import type { ImageType } from '@/components/Preview'
+import type { CharacterId } from '@/lib/characters'
 import Preview from '@/components/Preview'
 
 type Weight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
@@ -12,10 +12,7 @@ interface FontOptions {
     lang?: string;
 }
 
-const loadFonts = async (baseUrl: string, imageType: ImageType): Promise<FontOptions[] | undefined> => {
-  const isSans = imageType === 'sans';
-  const isBlueArchive = imageType === 'hikari' || imageType === 'nozomi' || imageType === 'aris';
-
+const loadFonts = async (baseUrl: string): Promise<FontOptions[] | undefined> => {
   const fetchFont = async (fontFileName: string): Promise<ArrayBuffer> => {
     const fontUrl = new URL(`/fonts/${fontFileName}`, baseUrl).toString();
     const response = await fetch(fontUrl);
@@ -25,39 +22,25 @@ const loadFonts = async (baseUrl: string, imageType: ImageType): Promise<FontOpt
     return response.arrayBuffer();
   };
 
-  if (isSans) {
-    return [
-      {
-        name: 'DungGeunMo',
-        data: await fetchFont('DungGeunMo.otf'),
-        style: 'normal',
-      },
-    ];
-  }
-
-  if (isBlueArchive) {
-    return [
-      {
-        name: 'Gyeonggi Medium',
-        data: await fetchFont('gyeonggi_medium.otf'),
-        style: 'normal',
-      },
-    ];
-  }
-
-  return undefined;
+  return [
+    {
+      name: 'Gyeonggi Medium',
+      data: await fetchFont('gyeonggi_medium.otf'),
+      style: 'normal',
+    },
+  ];
 };
 
 export const commonImageResponse = async (
   baseUrl: string, 
   message: string, 
-  imageType: ImageType,
+  imageType: CharacterId,
   subType?: string,
-  zoomMode?: boolean
+  zoomMode?: boolean,
+  backgroundId?: string,
 ) => {
   try {
-    
-    const fonts = await loadFonts(baseUrl, imageType);
+    const fonts = await loadFonts(baseUrl);
 
     return new ImageResponse(
       (
@@ -67,6 +50,7 @@ export const commonImageResponse = async (
           imageType={imageType} 
           subType={subType}
           zoomMode={zoomMode}
+          backgroundId={backgroundId}
         />
       ),
       {

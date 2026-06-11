@@ -79,40 +79,25 @@ export default function DashboardPage() {
   }));
 
   const getTypeImageUrl = (imageType: string): string => {
-    switch (imageType) {
-      case 'hikari':
-        return '/images/hikari.png';
-      case 'nozomi':
-        return '/images/nozomi.png';
-      case 'sans':
-        return '/images/sans.png';
-      case 'ichihime':
-        return '/images/ichihime.png';
-      case 'sana_stare':
-        return '/images/sana_stare.png';
-      case 'sana_dizzy':
-        return '/images/sana_dizzy.png';
-      case 'cat_lick':
-        return '/images/cat_lick.png';
-      case 'cat_scared':
-        return '/images/cat_scared.png';
-      case 'aris':
-        return '/images/aris.png';
-      default:
-        return '/favicon.ico';
+    if (imageType === 'hikari' || imageType === 'nozomi' || imageType === 'aris') {
+      return `/images/${imageType}.png`;
     }
+    return '/favicon.ico';
   };
 
-  const buildOgUrl = (msg: { message: string; imageType?: string; subType?: string; zoomMode?: boolean }): string => {
+  const buildOgUrl = (msg: { message: string; imageType?: string; subType?: string; zoomMode?: boolean; backgroundId?: string }): string => {
     const HOST = 'https://talk.nene.dev';
     const message = msg?.message || '';
     const encodedMessage = encodeURIComponent(message);
     const base = message.trim() ? `${HOST}/api/og/${encodedMessage}` : `${HOST}/api/og/`;
     const params = new URLSearchParams({
-      type: msg?.imageType || 'sana_stare',
+      type: msg?.imageType || 'hikari',
       subType: msg?.subType || '',
       zoom: String(msg?.zoomMode || false),
     });
+    if (msg?.backgroundId) {
+      params.set('bg', msg.backgroundId);
+    }
     return `${base}?${params.toString()}`;
   };
 
