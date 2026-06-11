@@ -100,32 +100,13 @@ export default function Home({ messageId = '' }: HomeProps) {
     const sentinel = previewSentinelRef.current;
     if (!sentinel) return;
 
-    const getRootMargin = () => {
-      const topOffset = window.matchMedia('(min-width: 1024px)').matches ? 24 : 16;
-      return `-${topOffset}px 0px 0px 0px`;
-    };
-
-    let observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => setIsPreviewStuck(!entry.isIntersecting),
-      { threshold: [0], rootMargin: getRootMargin() },
+      { threshold: [0] },
     );
     observer.observe(sentinel);
 
-    const mediaQuery = window.matchMedia('(min-width: 1024px)');
-    const handleViewportChange = () => {
-      observer.disconnect();
-      observer = new IntersectionObserver(
-        ([entry]) => setIsPreviewStuck(!entry.isIntersecting),
-        { threshold: [0], rootMargin: getRootMargin() },
-      );
-      observer.observe(sentinel);
-    };
-    mediaQuery.addEventListener('change', handleViewportChange);
-
-    return () => {
-      observer.disconnect();
-      mediaQuery.removeEventListener('change', handleViewportChange);
-    };
+    return () => observer.disconnect();
   }, []);
 
   const resetShareId = () => {
@@ -141,51 +122,54 @@ export default function Home({ messageId = '' }: HomeProps) {
   });
   const editorImageUrl = `/api/og/?${styleImageParams.toString()}`;
 
-  const handleShare = async () => {
+  const saveMessageIfNeeded = async (): Promise<string | null> => {
     if (!userMessage.trim()) {
       toast({
         title: "메시지를 입력해주세요.",
         variant: "destructive",
       });
-      return;
+      return null;
     }
 
+    if (currentId) return currentId;
+
+    const response = await fetch('/api/message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: userMessage,
+        imageType,
+        subType,
+        zoomMode,
+        backgroundId: resolveBackgroundId(backgroundId, CHARACTERS[imageType].defaultBackgroundId),
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.id) {
+      throw new Error(data.error || '메시지 저장에 실패했습니다.');
+    }
+
+    router.push(`/${data.id}`, { scroll: false });
+    setCurrentId(data.id);
+    return data.id;
+  };
+
+  const handleShare = async () => {
     setIsLoading(true);
 
     try {
-      let newId = currentId;
-      if (!currentId) {
-        const response = await fetch('/api/message', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: userMessage,
-            imageType,
-            subType,
-            zoomMode,
-            backgroundId: resolveBackgroundId(backgroundId, CHARACTERS[imageType].defaultBackgroundId),
-          }),
-        });
+      const newId = await saveMessageIfNeeded();
+      if (!newId) return;
 
-        const data = await response.json();
-
-        if (response.ok && data.id) {
-          newId = data.id;
-        } else {
-          throw new Error(data.error || '메시지 저장에 실패했습니다.');
-        }
-      }
-
-      const shareUrl = `/${newId}`;
-      navigator.clipboard.writeText(getAbsoluteUrl(shareUrl));
+      navigator.clipboard.writeText(getAbsoluteUrl(`/${newId}`));
       toast({
         title: "클립보드에 복사되었습니다!",
         description: "이 URL을 SNS에 공유해보세요.",
       });
-      router.push(`/${newId}`, { scroll: false });
-      setCurrentId(newId);
     } catch (error) {
       toast({
         title: "공유 실패",
@@ -234,51 +218,41 @@ export default function Home({ messageId = '' }: HomeProps) {
     return `${baseUrl}${path}`;
   };
 
-  const getCurrentUrl = () => {
-    if (typeof window === 'undefined' || !currentId) return ''
+  const getShareUrlForId = (id: string) => {
+    if (typeof window === 'undefined') return '';
 
-    let host = window.location.origin
+    let host = window.location.origin;
 
     if (!host || host === 'about:blank' || host.includes('localhost')) {
-      const PRODUCTION_URL = process.env.NEXT_PUBLIC_SITE_URL || 'talk.nene.dev'
-      host = `https://${PRODUCTION_URL}`
+      const PRODUCTION_URL = process.env.NEXT_PUBLIC_SITE_URL || 'talk.nene.dev';
+      host = `https://${PRODUCTION_URL}`;
     }
 
-    return `${host}/${currentId}`
-  }
+    return `${host}/${id}`;
+  };
 
-  const getTwitterShareUrl = () => {
-    const currentUrl = getCurrentUrl()
-    if (!currentUrl) return ''
+  const handleShareButtonClick = async () => {
+    setIsLoading(true);
 
-    const url = encodeURIComponent(currentUrl)
-    return `https://twitter.com/intent/tweet?url=${url}`
-  }
+    try {
+      const newId = await saveMessageIfNeeded();
+      if (!newId) return;
 
-  const handleShareButtonClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    const shareUrl = getCurrentUrl();
-    if (!shareUrl) {
+      const shareUrl = getShareUrlForId(newId);
+      window.open(
+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
+        '_blank',
+        'noopener,noreferrer',
+      );
+    } catch (error) {
       toast({
-        title: "공유할 URL이 없습니다",
-        description: "먼저 메시지를 저장해주세요.",
+        title: "공유 실패",
+        description: error instanceof Error ? error.message : '오류가 발생했습니다.',
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsLoading(false);
     }
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ url: shareUrl });
-        toast({ title: "공유되었습니다!" });
-        return;
-      } catch (error) {
-        console.error('공유 실패:', error);
-      }
-    }
-
-    window.open(getTwitterShareUrl(), '_blank', 'noopener,noreferrer');
   };
 
   const throttledEditorImageUrl = useThrottle(editorImageUrl, 500);
@@ -311,7 +285,7 @@ export default function Home({ messageId = '' }: HomeProps) {
             />
             <div
               className={cn(
-                'sticky top-4 z-20 w-full space-y-4 rounded-md px-4 py-1 transition-[background-color,box-shadow] duration-200 lg:top-6 lg:px-0',
+                'sticky top-0 z-20 w-full space-y-4 rounded-md px-4 pt-4 pb-1 transition-[background-color,box-shadow] duration-200 lg:px-0 lg:pt-6',
                 isPreviewStuck
                   ? 'bg-white pb-3 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.12),0_6px_12px_-2px_rgba(0,0,0,0.08)]'
                   : 'bg-transparent shadow-none',
@@ -337,7 +311,7 @@ export default function Home({ messageId = '' }: HomeProps) {
                 <Button
                   variant="outline"
                   className="flex-1"
-                  disabled={isLoading || !currentId}
+                  disabled={isLoading}
                   onClick={handleShareButtonClick}
                 >
                   <TwitterLogoIcon className="mr-2 h-4 w-4" /> 트위터에 공유하기
