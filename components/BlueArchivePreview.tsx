@@ -28,18 +28,18 @@ function BlueArchivePreview({
   const textPadding = '60px';
   const dialogBackgroundColor = (opacity: number) => `rgba(12, 17, 29, ${opacity})`;
   const charImageHeight = zoomMode ? '200%' : '150%';
-  const charImageBottom = zoomMode ? '-320px' : '-180px';
+  const baseCharImageBottom = zoomMode ? -320 : -180;
+  const charImageBottom = `${baseCharImageBottom + (config.thumbnailBottomOffset ?? 0)}px`;
+  const charImageLeft = `${50 + (config.thumbnailOffsetXPercent ?? 0)}%`;
   const messageFontSize = zoomMode ? '20px' : '14px';
 
   return (
     <div
       style={{
         display: 'flex',
+        position: 'relative',
         height: '100%',
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
         fontFamily: 'Gyeonggi Medium',
         overflow: 'hidden',
       }}
@@ -64,7 +64,7 @@ function BlueArchivePreview({
         style={{
           position: 'absolute',
           bottom: charImageBottom,
-          left: '50%',
+          left: charImageLeft,
           transform: 'translateX(-50%)',
           height: charImageHeight,
           objectFit: 'contain',
