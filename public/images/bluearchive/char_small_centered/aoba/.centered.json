@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 392,
+  "spriteReferenceWidth": 417,
+  "faceCrop": {
+    "left": 119,
+    "top": 46,
+    "width": 179,
+    "height": 179
+  },
+  "width": 417,
+  "anchorX": 208.5,
+  "padLeft": 0,
+  "padRight": 25,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/aoba",
+  "outputDir": "public/images/bluearchive/char_small_centered/aoba"
+}

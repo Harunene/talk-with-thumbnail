@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 884,
+  "spriteReferenceWidth": 893,
+  "faceCrop": {
+    "left": 349,
+    "top": 44,
+    "width": 195,
+    "height": 195
+  },
+  "width": 893,
+  "anchorX": 446.5,
+  "padLeft": 0,
+  "padRight": 9,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/momoi",
+  "outputDir": "public/images/bluearchive/char_small_centered/momoi"
+}

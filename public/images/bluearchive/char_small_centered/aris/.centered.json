@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 684,
+  "spriteReferenceWidth": 690,
+  "faceCrop": {
+    "left": 259,
+    "top": 33,
+    "width": 172,
+    "height": 172
+  },
+  "width": 690,
+  "anchorX": 345,
+  "padLeft": 0,
+  "padRight": 6,
+  "method": "template",
+  "siftScore": 0.9472,
+  "sourceDir": "public/images/bluearchive/char_small/aris",
+  "outputDir": "public/images/bluearchive/char_small_centered/aris"
+}

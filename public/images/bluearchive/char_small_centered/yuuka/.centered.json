@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 330,
+  "spriteReferenceWidth": 337,
+  "faceCrop": {
+    "left": 79,
+    "top": 23,
+    "width": 179,
+    "height": 179
+  },
+  "width": 337,
+  "anchorX": 168.5,
+  "padLeft": 0,
+  "padRight": 7,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/yuuka",
+  "outputDir": "public/images/bluearchive/char_small_centered/yuuka"
+}

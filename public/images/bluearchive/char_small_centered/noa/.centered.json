@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 426,
+  "spriteReferenceWidth": 555,
+  "faceCrop": {
+    "left": 207,
+    "top": 32,
+    "width": 141,
+    "height": 141
+  },
+  "width": 555,
+  "anchorX": 277.5,
+  "padLeft": 129,
+  "padRight": 0,
+  "method": "template",
+  "siftScore": 0.7483,
+  "sourceDir": "public/images/bluearchive/char_small/noa",
+  "outputDir": "public/images/bluearchive/char_small_centered/noa"
+}

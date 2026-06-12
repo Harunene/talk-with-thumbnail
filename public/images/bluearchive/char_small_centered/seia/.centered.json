@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 452,
+  "spriteReferenceWidth": 529,
+  "faceCrop": {
+    "left": 169,
+    "top": 43,
+    "width": 191,
+    "height": 191
+  },
+  "width": 529,
+  "anchorX": 264.5,
+  "padLeft": 77,
+  "padRight": 0,
+  "method": "template",
+  "siftScore": 0.8988,
+  "sourceDir": "public/images/bluearchive/char_small/seia",
+  "outputDir": "public/images/bluearchive/char_small_centered/seia"
+}

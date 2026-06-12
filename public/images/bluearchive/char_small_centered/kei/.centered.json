@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 1156,
+  "spriteReferenceWidth": 1189,
+  "faceCrop": {
+    "left": 521,
+    "top": 59,
+    "width": 147,
+    "height": 147
+  },
+  "width": 1189,
+  "anchorX": 594.5,
+  "padLeft": 0,
+  "padRight": 33,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/kei",
+  "outputDir": "public/images/bluearchive/char_small_centered/kei"
+}

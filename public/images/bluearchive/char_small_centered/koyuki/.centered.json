@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 580,
+  "spriteReferenceWidth": 764,
+  "faceCrop": {
+    "left": 291,
+    "top": 19,
+    "width": 182,
+    "height": 182
+  },
+  "width": 764,
+  "anchorX": 382,
+  "padLeft": 0,
+  "padRight": 184,
+  "method": "template",
+  "siftScore": 0.8771,
+  "sourceDir": "public/images/bluearchive/char_small/koyuki",
+  "outputDir": "public/images/bluearchive/char_small_centered/koyuki"
+}

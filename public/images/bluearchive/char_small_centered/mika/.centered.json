@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 460,
+  "spriteReferenceWidth": 499,
+  "faceCrop": {
+    "left": 178,
+    "top": 88,
+    "width": 143,
+    "height": 143
+  },
+  "width": 499,
+  "anchorX": 249.5,
+  "padLeft": 0,
+  "padRight": 39,
+  "method": "template",
+  "siftScore": 0.898,
+  "sourceDir": "public/images/bluearchive/char_small/mika",
+  "outputDir": "public/images/bluearchive/char_small_centered/mika"
+}

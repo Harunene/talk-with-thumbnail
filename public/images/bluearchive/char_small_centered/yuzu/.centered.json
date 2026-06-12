@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 420,
+  "spriteReferenceWidth": 496,
+  "faceCrop": {
+    "left": 159,
+    "top": 53,
+    "width": 178,
+    "height": 178
+  },
+  "width": 496,
+  "anchorX": 248,
+  "padLeft": 0,
+  "padRight": 76,
+  "method": "template",
+  "siftScore": 0.9281,
+  "sourceDir": "public/images/bluearchive/char_small/yuzu",
+  "outputDir": "public/images/bluearchive/char_small_centered/yuzu"
+}

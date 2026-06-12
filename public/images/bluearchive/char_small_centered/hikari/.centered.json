@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 442,
+  "spriteReferenceWidth": 455,
+  "faceCrop": {
+    "left": 127,
+    "top": 47,
+    "width": 201,
+    "height": 201
+  },
+  "width": 455,
+  "anchorX": 227.5,
+  "padLeft": 13,
+  "padRight": 0,
+  "method": "template",
+  "siftScore": 0.9359,
+  "sourceDir": "public/images/bluearchive/char_small/hikari",
+  "outputDir": "public/images/bluearchive/char_small_centered/hikari"
+}

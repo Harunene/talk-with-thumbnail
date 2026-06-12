@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 350,
+  "spriteReferenceWidth": 402,
+  "faceCrop": {
+    "left": 141,
+    "top": 37,
+    "width": 120,
+    "height": 120
+  },
+  "width": 402,
+  "anchorX": 201,
+  "padLeft": 0,
+  "padRight": 52,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/rio",
+  "outputDir": "public/images/bluearchive/char_small_centered/rio"
+}

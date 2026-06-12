@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 516,
+  "spriteReferenceWidth": 637,
+  "faceCrop": {
+    "left": 241,
+    "top": 70,
+    "width": 155,
+    "height": 155
+  },
+  "width": 637,
+  "anchorX": 318.5,
+  "padLeft": 0,
+  "padRight": 121,
+  "method": "template",
+  "siftScore": 0.9106,
+  "sourceDir": "public/images/bluearchive/char_small/nagisa",
+  "outputDir": "public/images/bluearchive/char_small_centered/nagisa"
+}

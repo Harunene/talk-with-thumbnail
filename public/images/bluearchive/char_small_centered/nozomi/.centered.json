@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 442,
+  "spriteReferenceWidth": 477,
+  "faceCrop": {
+    "left": 160,
+    "top": 72,
+    "width": 157,
+    "height": 157
+  },
+  "width": 477,
+  "anchorX": 238.5,
+  "padLeft": 0,
+  "padRight": 35,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/nozomi",
+  "outputDir": "public/images/bluearchive/char_small_centered/nozomi"
+}

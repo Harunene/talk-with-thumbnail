@@ -1,0 +1,18 @@
+{
+  "sourceWidth": 578,
+  "spriteReferenceWidth": 764,
+  "faceCrop": {
+    "left": 294,
+    "top": 64,
+    "width": 176,
+    "height": 176
+  },
+  "width": 764,
+  "anchorX": 382,
+  "padLeft": 186,
+  "padRight": 0,
+  "method": "template",
+  "siftScore": 1,
+  "sourceDir": "public/images/bluearchive/char_small/midori",
+  "outputDir": "public/images/bluearchive/char_small_centered/midori"
+}

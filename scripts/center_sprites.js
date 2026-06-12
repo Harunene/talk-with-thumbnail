@@ -1,20 +1,16 @@
 import sharp from 'sharp';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { CHARACTER_CATALOG, CHARACTER_IDS } from '../lib/characterCatalog.ts';
+import { detectFaceFromPortrait } from '../lib/detectFaceFromPortrait.ts';
+import { referenceSpritePath } from '../lib/portraitMatch.ts';
+import { DEFAULT_CONCURRENCY, mapPool } from './batchPool.js';
 
+/** wiki/다운로드 원본. 절대 덮어쓰지 않음 */
 const SOURCE_DIR = 'public/images/bluearchive/char_small';
-
-/** 패딩 전 얼굴 크롭. anchorX 가 있으면 얼굴 대신 해당 X를 썸네일 중앙 기준으로 사용 */
-const FACE_CROP = {
-  hikari: { left: 171, top: 103, width: 100, height: 100 },
-  nozomi: { left: 145, top: 108, width: 100, height: 100 },
-  aris: { left: 292, top: 80, width: 100, height: 100 },
-  aoba: { left: 146, top: 88, width: 100, height: 100 },
-  // 총 등 오른쪽 무게 때문에 전체 COM 대신 상체(55%) 중심 사용
-  // 1126px 기준 face 중앙(563) + 비대칭 padLeft 30px → 1156px, faceCrop.left 543
-  kei: { left: 543, top: 86, width: 100, height: 100, anchorX: 593 },
-  momoi: { left: 392, top: 90, width: 100, height: 100 },
-};
+/** 투명 패딩 적용 결과 */
+const OUTPUT_DIR = 'public/images/bluearchive/char_small_centered';
+const MATCH_MIN_SCORE = 0.12;
 
 function computeHorizontalPadding(width, faceCenterX) {
   const half = width / 2;
@@ -29,78 +25,145 @@ function computeHorizontalPadding(width, faceCenterX) {
   return { padLeft: 0, padRight, newWidth: width + padRight };
 }
 
-async function centerCharacterSprites(character, crop) {
+async function resolveFaceAnchor(character, entry) {
   const charDir = path.join(SOURCE_DIR, character);
-  const markerPath = path.join(charDir, '.centered.json');
-  const files = (await fs.readdir(charDir)).filter((file) => file.endsWith('.png'));
-  const samplePath = path.join(charDir, files[0]);
-  const sample = await sharp(samplePath).metadata();
-  const width = sample.width;
-
-  try {
-    const marker = JSON.parse(await fs.readFile(markerPath, 'utf8'));
-    if (marker.width === width) {
-      console.log(`${character}: skip (${width}px, already centered)`);
-      return marker;
-    }
-    console.log(`${character}: width changed (${marker.width} -> ${width}), re-centering`);
-  } catch {
-    // not centered yet
+  const files = (await fs.readdir(charDir)).filter((file) => file.endsWith('.png')).sort();
+  if (files.length === 0) {
+    throw new Error(`${character}: no sprites`);
   }
 
-  const anchorX = crop.anchorX ?? crop.left + crop.width / 2;
-  const { padLeft, padRight, newWidth } = computeHorizontalPadding(width, anchorX);
+  const samplePath = referenceSpritePath(character, charDir, files);
+  const portraitMatch = await detectFaceFromPortrait(samplePath, entry.wikiPrefix);
+  if (!portraitMatch || portraitMatch.score < MATCH_MIN_SCORE) {
+    throw new Error(
+      `${character}: SIFT portrait match failed (score ${portraitMatch?.score?.toFixed(3) ?? 'n/a'})`,
+    );
+  }
+
+  return {
+    anchorX: portraitMatch.anchorX,
+    faceCrop: portraitMatch.faceCrop,
+    method: 'sift',
+    score: portraitMatch.score,
+  };
+}
+
+async function centerCharacterSprites(character, anchor) {
+  const sourceCharDir = path.join(SOURCE_DIR, character);
+  const outputCharDir = path.join(OUTPUT_DIR, character);
+  const markerPath = path.join(outputCharDir, '.centered.json');
+
+  await fs.mkdir(outputCharDir, { recursive: true });
+
+  const files = (await fs.readdir(sourceCharDir)).filter((file) => file.endsWith('.png'));
+  if (files.length === 0) {
+    console.log(`${character}: skip (no sprites)`);
+    return null;
+  }
+
+  const samplePath = path.join(sourceCharDir, files[0]);
+  const sample = await sharp(samplePath).metadata();
+  const width = sample.width ?? 0;
+  const crop = anchor.faceCrop;
+
+  const { padLeft, padRight, newWidth } = computeHorizontalPadding(width, anchor.anchorX);
+
+  const faceCropKey = (value) =>
+    `${value.left},${value.top},${value.width},${value.height}`;
+
+  let existingMarker = null;
+  try {
+    existingMarker = JSON.parse(await fs.readFile(markerPath, 'utf8'));
+    const nextCenteredCrop = { ...crop, left: crop.left + padLeft };
+    if (
+      existingMarker.sourceWidth === width &&
+      existingMarker.padLeft === padLeft &&
+      existingMarker.padRight === padRight &&
+      existingMarker.method === anchor.method &&
+      faceCropKey(existingMarker.faceCrop ?? {}) === faceCropKey(nextCenteredCrop)
+    ) {
+      console.log(`${character}: skip (centered output up to date, ${anchor.method})`);
+      return existingMarker;
+    }
+  } catch {
+    // regenerate
+  }
 
   if (padLeft === 0 && padRight === 0) {
-    const marker = {
-      spriteReferenceWidth: width,
-      faceCrop: crop,
-      width,
-      anchorX,
-    };
-    await fs.writeFile(markerPath, JSON.stringify(marker, null, 2));
-    console.log(`${character}: already centered (${width}px)`);
-    return marker;
+    console.log(`${character}: already centered in source (${width}px), copying as-is`);
+  } else {
+    console.log(
+      `${character}: [${anchor.method}] ${width}px -> ${newWidth}px (padLeft=${padLeft}, padRight=${padRight})`,
+    );
   }
 
-  console.log(
-    `${character}: ${width}px -> ${newWidth}px (padLeft=${padLeft}, padRight=${padRight})`,
-  );
-
   for (const file of files) {
-    const sourcePath = path.join(charDir, file);
-    const targetPath = path.join(charDir, `.tmp_${file}`);
+    const sourcePath = path.join(sourceCharDir, file);
+    const outputPath = path.join(outputCharDir, file);
+
+    if (padLeft === 0 && padRight === 0) {
+      await fs.copyFile(sourcePath, outputPath);
+      continue;
+    }
+
     await sharp(sourcePath)
       .extend({
         left: padLeft,
         right: padRight,
         background: { r: 0, g: 0, b: 0, alpha: 0 },
       })
-      .toFile(targetPath);
-    await fs.rename(targetPath, sourcePath);
+      .toFile(outputPath);
   }
 
-  const marker = {
-    spriteReferenceWidth: newWidth,
-    faceCrop: {
-      ...crop,
-      left: crop.left + padLeft,
-    },
-    width: newWidth,
-    anchorX,
+  const centeredFaceCrop = {
+    ...crop,
+    left: crop.left + padLeft,
   };
+  const centeredAnchorX = anchor.anchorX + padLeft;
+
+  const marker = {
+    sourceWidth: width,
+    spriteReferenceWidth: padLeft === 0 && padRight === 0 ? width : newWidth,
+    faceCrop: centeredFaceCrop,
+    width: padLeft === 0 && padRight === 0 ? width : newWidth,
+    anchorX: centeredAnchorX,
+    padLeft,
+    padRight,
+    method: anchor.method,
+    matchScore: anchor.score,
+    sourceDir: sourceCharDir,
+    outputDir: outputCharDir,
+  };
+
   await fs.writeFile(markerPath, JSON.stringify(marker, null, 2));
   return marker;
 }
 
-const results = {};
-for (const [character, crop] of Object.entries(FACE_CROP)) {
-  results[character] = await centerCharacterSprites(character, crop);
-}
+const onlyIds = process.argv.slice(2);
+const targets = onlyIds.length > 0 ? onlyIds : CHARACTER_IDS;
 
-console.log('\nUpdated config:');
-for (const [character, { spriteReferenceWidth, faceCrop }] of Object.entries(results)) {
+const results = {};
+await mapPool(targets, Math.min(4, DEFAULT_CONCURRENCY), async (character) => {
+  const entry = CHARACTER_CATALOG[character];
+  if (!entry) return;
+
+  const charDir = path.join(SOURCE_DIR, character);
+  try {
+    await fs.access(charDir);
+  } catch {
+    console.log(`${character}: skip (missing folder)`);
+    return;
+  }
+
+  const anchor = await resolveFaceAnchor(character, entry);
+  results[character] = await centerCharacterSprites(character, anchor);
+});
+
+console.log('\nCentered output -> char_small_centered/ (originals preserved in char_small/):');
+for (const [character, result] of Object.entries(results)) {
+  if (!result) continue;
+  const { spriteReferenceWidth, faceCrop, padLeft, padRight, method, anchorX } = result;
   console.log(
-    `${character}: spriteReferenceWidth=${spriteReferenceWidth}, faceCrop={ left: ${faceCrop.left}, top: ${faceCrop.top}, width: ${faceCrop.width}, height: ${faceCrop.height} }`,
+    `${character}: [${method}] width=${spriteReferenceWidth}, anchorX=${Number(anchorX).toFixed(1)}, pad L/R=${padLeft}/${padRight}, faceCrop left=${faceCrop.left}`,
   );
 }
