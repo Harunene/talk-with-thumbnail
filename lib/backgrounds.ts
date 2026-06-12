@@ -13,6 +13,12 @@ export const BACKGROUNDS: BackgroundConfig[] = [
   { id: 'gamedev-room', name: '게임개발부 부실', file: 'gamedev-room.jpg', wikiFile: 'BG GameDevRoom.jpg' },
   { id: 'arona-room', name: '아로나 룸', file: 'arona-room.jpg' },
   { id: 'committee-room', name: '대책위원회', file: 'committee-room.jpg' },
+  {
+    id: 'schale-office',
+    name: '샬레 사무실',
+    file: 'schale-office.jpg',
+    wikiFile: 'BG MainOffice.jpg',
+  },
   { id: 'computer-center', name: '전산실', file: 'computer-center.jpg' },
   {
     id: 'computer-center-erode',

@@ -51,10 +51,12 @@ export default function ExpressionPicker({ characterId, value, onChange }: Expre
               style={{ width: EXPRESSION_ICON_SIZE, height: EXPRESSION_ICON_SIZE }}
             >
               <Image
+                key={`${characterId}-${expression}`}
                 src={getCharacterFacePath(characterId, expression)}
                 alt={`${character.name} ${num}`}
                 width={EXPRESSION_ICON_SIZE}
                 height={EXPRESSION_ICON_SIZE}
+                unoptimized
                 className="h-full w-full object-cover object-center"
               />
             </button>
