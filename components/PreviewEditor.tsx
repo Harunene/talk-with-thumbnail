@@ -71,7 +71,7 @@ export default function PreviewEditor({
           onChange={(e) => onChange(e.target.value)}
           placeholder="말풍선에 표시할 메시지를 입력하세요"
           spellCheck={false}
-          className="absolute left-[10%] right-[10%] top-[78%] bottom-[5%] z-20 resize-none overflow-hidden border-0 bg-transparent p-0 text-white placeholder:text-white/45 focus:outline-none focus:ring-0"
+          className="ph-include-capture absolute left-[10%] right-[10%] top-[78%] bottom-[5%] z-20 resize-none overflow-hidden border-0 bg-transparent p-0 text-white placeholder:text-white/45 focus:outline-none focus:ring-0"
           style={{
             fontFamily: '"Gyeonggi Medium", sans-serif',
             fontSize,
