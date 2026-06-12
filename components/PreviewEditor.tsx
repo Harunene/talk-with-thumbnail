@@ -11,6 +11,8 @@ interface PreviewEditorProps {
   zoomMode?: boolean;
   isLoading?: boolean;
   onImageLoad?: () => void;
+  /** false면 OG 이미지만 표시 (그리드 비교용) */
+  interactive?: boolean;
 }
 
 export default function PreviewEditor({
@@ -20,6 +22,7 @@ export default function PreviewEditor({
   zoomMode = false,
   isLoading = false,
   onImageLoad,
+  interactive = true,
 }: PreviewEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState(14);
@@ -60,21 +63,23 @@ export default function PreviewEditor({
         onError={onImageLoad}
       />
 
-      <textarea
-        id="message"
-        aria-label="하고싶은 말"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="말풍선에 표시할 메시지를 입력하세요"
-        spellCheck={false}
-        className="absolute left-[10%] right-[10%] top-[78%] bottom-[5%] z-20 resize-none overflow-hidden border-0 bg-transparent p-0 text-white placeholder:text-white/45 focus:outline-none focus:ring-0"
-        style={{
-          fontFamily: '"Gyeonggi Medium", sans-serif',
-          fontSize,
-          lineHeight: 1.4,
-          textShadow: '0 0 5px #1A2B5F',
-        }}
-      />
+      {interactive ? (
+        <textarea
+          id="message"
+          aria-label="하고싶은 말"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="말풍선에 표시할 메시지를 입력하세요"
+          spellCheck={false}
+          className="absolute left-[10%] right-[10%] top-[78%] bottom-[5%] z-20 resize-none overflow-hidden border-0 bg-transparent p-0 text-white placeholder:text-white/45 focus:outline-none focus:ring-0"
+          style={{
+            fontFamily: '"Gyeonggi Medium", sans-serif',
+            fontSize,
+            lineHeight: 1.4,
+            textShadow: '0 0 5px #1A2B5F',
+          }}
+        />
+      ) : null}
 
       {(isLoading || !imageUrl) && (
         <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/30">
