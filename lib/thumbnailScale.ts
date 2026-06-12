@@ -11,7 +11,7 @@ export const THUMBNAIL_CEILING_HEIGHT_CM = 180;
 /** char_small_centered 히카리 iconCrop 중심 Y */
 export const THUMBNAIL_BASELINE_ICON_CENTER_Y = 167;
 export const THUMBNAIL_BASE_HEIGHT_PERCENT = 150;
-export const THUMBNAIL_ZOOM_HEIGHT_PERCENT = 200;
+export const THUMBNAIL_ZOOM_HEIGHT_PERCENT = 220;
 export const THUMBNAIL_BASE_BOTTOM_PX = -180;
 export const THUMBNAIL_ZOOM_BOTTOM_PX = -320;
 export const THUMBNAIL_VIEWPORT_HEIGHT_PX = 315;
