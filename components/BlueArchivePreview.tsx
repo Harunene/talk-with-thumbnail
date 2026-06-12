@@ -28,10 +28,26 @@ function BlueArchivePreview({
   const darkNavyBlue = '#1A2B5F';
   const textPadding = '60px';
   const dialogBackgroundColor = (opacity: number) => `rgba(12, 17, 29, ${opacity})`;
-  const charImageHeight = getThumbnailHeightPercent(config.heightCm, zoomMode);
-  const charImageBottom = `${getThumbnailBottomOffsetPx(config.heightCm, zoomMode, {
-    faceCropTop: config.faceCrop?.top,
-  })}px`;
+  const charImageHeight = getThumbnailHeightPercent(
+    {
+      heightCm: config.heightCm,
+      pose: config.pose,
+      faceCrop: config.faceCrop,
+      iconCrop: config.iconCrop,
+      footY: config.footY,
+    },
+    zoomMode,
+  );
+  const charImageBottom = `${getThumbnailBottomOffsetPx(
+    {
+      heightCm: config.heightCm,
+      pose: config.pose,
+      faceCrop: config.faceCrop,
+      iconCrop: config.iconCrop,
+      footY: config.footY,
+    },
+    zoomMode,
+  )}px`;
   const charImageLeft = '50%';
   const messageFontSize = zoomMode ? '20px' : '14px';
 
