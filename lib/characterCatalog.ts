@@ -108,7 +108,7 @@ export const CHARACTER_CATALOG = {
   aoba: {
     id: 'aoba',
     name: '아오바',
-    affiliation: '화물철도 관리부',
+    affiliation: '화물운송관리부',
     school: 'abydos',
     schoolLabel: '아비도스',
     club: 'freight-rail',
