@@ -1,0 +1,11 @@
+{
+  "spriteReferenceWidth": 420,
+  "faceCrop": {
+    "left": 160,
+    "top": 64,
+    "width": 100,
+    "height": 100
+  },
+  "width": 420,
+  "anchorX": 210
+}

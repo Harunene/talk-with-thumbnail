@@ -1,25 +1,18 @@
 import sharp from 'sharp';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {
+  CHARACTER_CATALOG,
+  CHARACTER_IDS,
+  getDefaultVariant,
+  getWikiSpriteIndices,
+} from '../lib/characterCatalog.ts';
 
 const WIKI_BASE = 'https://bluearchive.wiki/wiki/Special:FilePath/';
 const OUTPUT_DIR = 'public/images/bluearchive/char_small';
 const TARGET_HEIGHT = 768;
 
-/** Wiki gallery uses {Name}_{NN}.png; we store up_{id}_{NNN}.png */
-const CHARACTERS = [
-  { id: 'momoi', wikiPrefix: 'Momoi', indices: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
-  {
-    id: 'kei',
-    wikiPrefix: 'Kei',
-    indices: Array.from({ length: 30 }, (_, i) => i),
-  },
-  {
-    id: 'aoba',
-    wikiPrefix: 'Aoba',
-    indices: Array.from({ length: 29 }, (_, i) => i),
-  },
-];
+const onlyIds = process.argv.slice(2);
 
 async function downloadSprite(wikiPrefix, index) {
   const wikiFile = `${wikiPrefix}_${String(index).padStart(2, '0')}.png`;
@@ -33,17 +26,24 @@ async function downloadSprite(wikiPrefix, index) {
   return Buffer.from(await response.arrayBuffer());
 }
 
-async function processCharacter({ id, wikiPrefix, indices }) {
-  const outDir = path.join(OUTPUT_DIR, id);
+async function processCharacterEntry(entry, variant) {
+  const folderName =
+    variant.id === entry.defaultVariantId || variant.id === 'default'
+      ? entry.id
+      : `${entry.id}--${variant.id}`;
+  const outDir = path.join(OUTPUT_DIR, folderName);
   await fs.mkdir(outDir, { recursive: true });
+
+  const wikiPrefix = variant.wikiPrefix ?? entry.wikiPrefix;
+  const indices = getWikiSpriteIndices(entry);
 
   for (let i = 0; i < indices.length; i++) {
     const wikiIndex = indices[i];
     const expression = String(i + 1).padStart(3, '0');
-    const outFile = `up_${id}_${expression}.png`;
+    const outFile = `up_${entry.id}_${expression}.png`;
     const outPath = path.join(outDir, outFile);
 
-    console.log(`Downloading ${wikiPrefix}_${String(wikiIndex).padStart(2, '0')}.png -> ${outFile}`);
+    console.log(`Downloading ${wikiPrefix}_${String(wikiIndex).padStart(2, '0')}.png -> ${folderName}/${outFile}`);
     const buffer = await downloadSprite(wikiPrefix, wikiIndex);
 
     await sharp(buffer)
@@ -52,8 +52,12 @@ async function processCharacter({ id, wikiPrefix, indices }) {
   }
 }
 
-for (const character of CHARACTERS) {
-  await processCharacter(character);
+for (const characterId of CHARACTER_IDS) {
+  if (onlyIds.length > 0 && !onlyIds.includes(characterId)) continue;
+
+  const entry = CHARACTER_CATALOG[characterId];
+  const defaultVariant = getDefaultVariant(entry);
+  await processCharacterEntry(entry, defaultVariant);
 }
 
 console.log('Done.');

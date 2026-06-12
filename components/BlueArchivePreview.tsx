@@ -1,5 +1,6 @@
-import { CHARACTERS, type CharacterId } from '@/lib/characters';
+import { CHARACTERS, getCharacterSpritePath, type CharacterId } from '@/lib/characters';
 import { getBackgroundPath, resolveBackgroundId } from '@/lib/backgrounds';
+import { getThumbnailBottomOffsetPx, getThumbnailHeightPercent } from '@/lib/thumbnailScale';
 import type { PreviewProps } from './Preview';
 
 function BlueArchivePreview({
@@ -22,15 +23,16 @@ function BlueArchivePreview({
 
   const resolvedBackgroundId = resolveBackgroundId(backgroundId, config.defaultBackgroundId);
   const bgImagePath = `${imageBaseUrl}${getBackgroundPath(resolvedBackgroundId)}`;
-  const charImagePath = `${imageBaseUrl}/images/bluearchive/char_small/${imageType}/up_${imageType}_${validSubType}.png`;
+  const charImagePath = `${imageBaseUrl}${getCharacterSpritePath(imageType as CharacterId, validSubType, undefined, { centered: true })}`;
 
   const darkNavyBlue = '#1A2B5F';
   const textPadding = '60px';
   const dialogBackgroundColor = (opacity: number) => `rgba(12, 17, 29, ${opacity})`;
-  const charImageHeight = zoomMode ? '200%' : '150%';
-  const baseCharImageBottom = zoomMode ? -320 : -180;
-  const charImageBottom = `${baseCharImageBottom + (config.thumbnailBottomOffset ?? 0)}px`;
-  const charImageLeft = `${50 + (config.thumbnailOffsetXPercent ?? 0)}%`;
+  const charImageHeight = getThumbnailHeightPercent(config.heightCm, zoomMode);
+  const charImageBottom = `${getThumbnailBottomOffsetPx(config.heightCm, zoomMode, {
+    faceCropTop: config.faceCrop?.top,
+  })}px`;
+  const charImageLeft = '50%';
   const messageFontSize = zoomMode ? '20px' : '14px';
 
   return (

@@ -12,12 +12,14 @@ export interface MessageData {
   subType?: string;
   zoomMode?: boolean;
   backgroundId?: string;
+  /** 캐릭터 스킨/대체형 id (예: default, maid) */
+  variantId?: string;
 }
 
 // 메시지의 해시 ID 생성 함수
 function generateHashId(data: MessageData): string {
   // 메시지와 이미지 타입, 이미지 서브타입을 함께 해시
-  const hashContent = `${data.message}|${data.imageType || 'default'}|${data.subType || ''}|${data.zoomMode || ''}|${data.backgroundId || ''}`;
+  const hashContent = `${data.message}|${data.imageType || 'default'}|${data.subType || ''}|${data.zoomMode || ''}|${data.backgroundId || ''}|${data.variantId || ''}`;
   // SHA-256 해시 생성 (충돌 가능성 매우 낮음)
   const hash = crypto.createHash('sha256').update(hashContent).digest('hex');
   // 첫 8자리만 사용 (충분히 고유하면서 짧은 ID)
@@ -33,6 +35,7 @@ export async function storeMessage(data: MessageData): Promise<string> {
     subType: data.subType,
     zoomMode: data.zoomMode || false,
     backgroundId: data.backgroundId,
+    variantId: data.variantId,
   };
   
   // 해시 기반 ID 생성
