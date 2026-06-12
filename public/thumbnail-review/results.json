@@ -1,0 +1,752 @@
+[
+  {
+    "id": "hikari",
+    "name": "히카리",
+    "defaultBackgroundId": "abydos-desert",
+    "referenceSprite": "up_hikari_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Hikari.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.81,
+      "method": "sift",
+      "faceCrop": {
+        "left": 130,
+        "top": 64,
+        "width": 195,
+        "height": 165
+      },
+      "goodMatches": 91,
+      "inliers": 90,
+      "inlierRatio": 0.989
+    },
+    "matchScore": 1,
+    "matchScale": 0.81,
+    "matchMethod": "sift",
+    "anchorX": 227.5,
+    "catalogFaceCrop": {
+      "left": 127,
+      "top": 47,
+      "width": 201,
+      "height": 201
+    },
+    "portraitFaceCrop": {
+      "left": 130,
+      "top": 64,
+      "width": 195,
+      "height": 165
+    },
+    "faceCropDistance": 17.26267650163207,
+    "centeredFaceCrop": {
+      "left": 127,
+      "top": 47,
+      "width": 201,
+      "height": 201
+    },
+    "centeredWidth": 455,
+    "centeredAnchorX": 227.5,
+    "padLeft": 13,
+    "padRight": 0,
+    "centerMethod": "template"
+  },
+  {
+    "id": "nozomi",
+    "name": "노조미",
+    "defaultBackgroundId": "abydos-desert",
+    "referenceSprite": "up_nozomi_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Nozomi.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.791,
+      "method": "sift",
+      "faceCrop": {
+        "left": 162,
+        "top": 70,
+        "width": 154,
+        "height": 162
+      },
+      "goodMatches": 43,
+      "inliers": 42,
+      "inlierRatio": 0.977
+    },
+    "matchScore": 1,
+    "matchScale": 0.791,
+    "matchMethod": "sift",
+    "anchorX": 239,
+    "catalogFaceCrop": {
+      "left": 160,
+      "top": 72,
+      "width": 157,
+      "height": 157
+    },
+    "portraitFaceCrop": {
+      "left": 162,
+      "top": 70,
+      "width": 154,
+      "height": 162
+    },
+    "faceCropDistance": 2.8284271247461903,
+    "centeredFaceCrop": {
+      "left": 160,
+      "top": 72,
+      "width": 157,
+      "height": 157
+    },
+    "centeredWidth": 477,
+    "centeredAnchorX": 238.5,
+    "padLeft": 0,
+    "padRight": 35,
+    "centerMethod": "template"
+  },
+  {
+    "id": "aoba",
+    "name": "아오바",
+    "defaultBackgroundId": "abydos-desert",
+    "referenceSprite": "up_aoba_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Aoba.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.782,
+      "method": "sift",
+      "faceCrop": {
+        "left": 121,
+        "top": 56,
+        "width": 178,
+        "height": 160
+      },
+      "goodMatches": 67,
+      "inliers": 63,
+      "inlierRatio": 0.94
+    },
+    "matchScore": 1,
+    "matchScale": 0.782,
+    "matchMethod": "sift",
+    "anchorX": 210,
+    "catalogFaceCrop": {
+      "left": 119,
+      "top": 46,
+      "width": 179,
+      "height": 179
+    },
+    "portraitFaceCrop": {
+      "left": 121,
+      "top": 56,
+      "width": 178,
+      "height": 160
+    },
+    "faceCropDistance": 10.198039027185569,
+    "centeredFaceCrop": {
+      "left": 119,
+      "top": 46,
+      "width": 179,
+      "height": 179
+    },
+    "centeredWidth": 417,
+    "centeredAnchorX": 208.5,
+    "padLeft": 0,
+    "padRight": 25,
+    "centerMethod": "template"
+  },
+  {
+    "id": "aris",
+    "name": "아리스",
+    "defaultBackgroundId": "gamedev-room",
+    "referenceSprite": "up_aris_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Aris.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.803,
+      "method": "sift",
+      "faceCrop": {
+        "left": 260,
+        "top": 38,
+        "width": 171,
+        "height": 164
+      },
+      "goodMatches": 45,
+      "inliers": 39,
+      "inlierRatio": 0.867
+    },
+    "matchScore": 1,
+    "matchScale": 0.803,
+    "matchMethod": "sift",
+    "anchorX": 345.5,
+    "catalogFaceCrop": {
+      "left": 259,
+      "top": 33,
+      "width": 172,
+      "height": 172
+    },
+    "portraitFaceCrop": {
+      "left": 260,
+      "top": 38,
+      "width": 171,
+      "height": 164
+    },
+    "faceCropDistance": 5.0990195135927845,
+    "centeredFaceCrop": {
+      "left": 259,
+      "top": 33,
+      "width": 172,
+      "height": 172
+    },
+    "centeredWidth": 690,
+    "centeredAnchorX": 345,
+    "padLeft": 0,
+    "padRight": 6,
+    "centerMethod": "template"
+  },
+  {
+    "id": "momoi",
+    "name": "모모이",
+    "defaultBackgroundId": "gamedev-room",
+    "referenceSprite": "up_momoi_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Momoi.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.842,
+      "method": "sift",
+      "faceCrop": {
+        "left": 349,
+        "top": 55,
+        "width": 197,
+        "height": 172
+      },
+      "goodMatches": 82,
+      "inliers": 75,
+      "inlierRatio": 0.915
+    },
+    "matchScore": 1,
+    "matchScale": 0.842,
+    "matchMethod": "sift",
+    "anchorX": 447.5,
+    "catalogFaceCrop": {
+      "left": 349,
+      "top": 44,
+      "width": 195,
+      "height": 195
+    },
+    "portraitFaceCrop": {
+      "left": 349,
+      "top": 55,
+      "width": 197,
+      "height": 172
+    },
+    "faceCropDistance": 11,
+    "centeredFaceCrop": {
+      "left": 349,
+      "top": 44,
+      "width": 195,
+      "height": 195
+    },
+    "centeredWidth": 893,
+    "centeredAnchorX": 446.5,
+    "padLeft": 0,
+    "padRight": 9,
+    "centerMethod": "template"
+  },
+  {
+    "id": "midori",
+    "name": "미도리",
+    "defaultBackgroundId": "gamedev-room",
+    "referenceSprite": "up_midori_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Midori.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.827,
+      "method": "sift",
+      "faceCrop": {
+        "left": 293,
+        "top": 68,
+        "width": 179,
+        "height": 169
+      },
+      "goodMatches": 99,
+      "inliers": 89,
+      "inlierRatio": 0.899
+    },
+    "matchScore": 1,
+    "matchScale": 0.827,
+    "matchMethod": "sift",
+    "anchorX": 382.5,
+    "catalogFaceCrop": {
+      "left": 294,
+      "top": 64,
+      "width": 176,
+      "height": 176
+    },
+    "portraitFaceCrop": {
+      "left": 293,
+      "top": 68,
+      "width": 179,
+      "height": 169
+    },
+    "faceCropDistance": 4.123105625617661,
+    "centeredFaceCrop": {
+      "left": 294,
+      "top": 64,
+      "width": 176,
+      "height": 176
+    },
+    "centeredWidth": 764,
+    "centeredAnchorX": 382,
+    "padLeft": 186,
+    "padRight": 0,
+    "centerMethod": "template"
+  },
+  {
+    "id": "yuzu",
+    "name": "유즈",
+    "defaultBackgroundId": "gamedev-room",
+    "referenceSprite": "up_yuzu_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Yuzu.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.801,
+      "method": "sift",
+      "faceCrop": {
+        "left": 155,
+        "top": 60,
+        "width": 184,
+        "height": 163
+      },
+      "goodMatches": 108,
+      "inliers": 105,
+      "inlierRatio": 0.972
+    },
+    "matchScore": 1,
+    "matchScale": 0.801,
+    "matchMethod": "sift",
+    "anchorX": 247,
+    "catalogFaceCrop": {
+      "left": 159,
+      "top": 53,
+      "width": 178,
+      "height": 178
+    },
+    "portraitFaceCrop": {
+      "left": 155,
+      "top": 60,
+      "width": 184,
+      "height": 163
+    },
+    "faceCropDistance": 8.06225774829855,
+    "centeredFaceCrop": {
+      "left": 159,
+      "top": 53,
+      "width": 178,
+      "height": 178
+    },
+    "centeredWidth": 496,
+    "centeredAnchorX": 248,
+    "padLeft": 0,
+    "padRight": 76,
+    "centerMethod": "template"
+  },
+  {
+    "id": "kei",
+    "name": "케이",
+    "defaultBackgroundId": "eridu-tower-inside",
+    "referenceSprite": "up_kei_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Kei.png",
+    "sift": {
+      "score": 0.693,
+      "scale": 0.724,
+      "method": "sift",
+      "faceCrop": {
+        "left": 520,
+        "top": 59,
+        "width": 150,
+        "height": 148
+      },
+      "goodMatches": 27,
+      "inliers": 20,
+      "inlierRatio": 0.741
+    },
+    "matchScore": 0.693,
+    "matchScale": 0.724,
+    "matchMethod": "sift",
+    "anchorX": 595,
+    "catalogFaceCrop": {
+      "left": 521,
+      "top": 59,
+      "width": 147,
+      "height": 147
+    },
+    "portraitFaceCrop": {
+      "left": 520,
+      "top": 59,
+      "width": 150,
+      "height": 148
+    },
+    "faceCropDistance": 1,
+    "centeredFaceCrop": {
+      "left": 521,
+      "top": 59,
+      "width": 147,
+      "height": 147
+    },
+    "centeredWidth": 1189,
+    "centeredAnchorX": 594.5,
+    "padLeft": 0,
+    "padRight": 33,
+    "centerMethod": "template"
+  },
+  {
+    "id": "yuuka",
+    "name": "유우카",
+    "defaultBackgroundId": "computer-center",
+    "referenceSprite": "up_yuuka_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Yuuka.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.736,
+      "method": "sift",
+      "faceCrop": {
+        "left": 79,
+        "top": 41,
+        "width": 181,
+        "height": 143
+      },
+      "goodMatches": 68,
+      "inliers": 64,
+      "inlierRatio": 0.941
+    },
+    "matchScore": 1,
+    "matchScale": 0.736,
+    "matchMethod": "sift",
+    "anchorX": 169.5,
+    "catalogFaceCrop": {
+      "left": 79,
+      "top": 23,
+      "width": 179,
+      "height": 179
+    },
+    "portraitFaceCrop": {
+      "left": 79,
+      "top": 41,
+      "width": 181,
+      "height": 143
+    },
+    "faceCropDistance": 18,
+    "centeredFaceCrop": {
+      "left": 79,
+      "top": 23,
+      "width": 179,
+      "height": 179
+    },
+    "centeredWidth": 337,
+    "centeredAnchorX": 168.5,
+    "padLeft": 0,
+    "padRight": 7,
+    "centerMethod": "template"
+  },
+  {
+    "id": "noa",
+    "name": "노아",
+    "defaultBackgroundId": "computer-center",
+    "referenceSprite": "up_noa_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Noa.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.672,
+      "method": "sift",
+      "faceCrop": {
+        "left": 216,
+        "top": 33,
+        "width": 121,
+        "height": 137
+      },
+      "goodMatches": 42,
+      "inliers": 39,
+      "inlierRatio": 0.929
+    },
+    "matchScore": 1,
+    "matchScale": 0.672,
+    "matchMethod": "sift",
+    "anchorX": 276.5,
+    "catalogFaceCrop": {
+      "left": 207,
+      "top": 32,
+      "width": 141,
+      "height": 141
+    },
+    "portraitFaceCrop": {
+      "left": 216,
+      "top": 33,
+      "width": 121,
+      "height": 137
+    },
+    "faceCropDistance": 9.055385138137417,
+    "centeredFaceCrop": {
+      "left": 207,
+      "top": 32,
+      "width": 141,
+      "height": 141
+    },
+    "centeredWidth": 555,
+    "centeredAnchorX": 277.5,
+    "padLeft": 129,
+    "padRight": 0,
+    "centerMethod": "template"
+  },
+  {
+    "id": "koyuki",
+    "name": "코유키",
+    "defaultBackgroundId": "computer-center",
+    "referenceSprite": "up_koyuki_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Koyuki.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.718,
+      "method": "sift",
+      "faceCrop": {
+        "left": 294,
+        "top": 37,
+        "width": 179,
+        "height": 146
+      },
+      "goodMatches": 60,
+      "inliers": 59,
+      "inlierRatio": 0.983
+    },
+    "matchScore": 1,
+    "matchScale": 0.718,
+    "matchMethod": "sift",
+    "anchorX": 383.5,
+    "catalogFaceCrop": {
+      "left": 291,
+      "top": 19,
+      "width": 182,
+      "height": 182
+    },
+    "portraitFaceCrop": {
+      "left": 294,
+      "top": 37,
+      "width": 179,
+      "height": 146
+    },
+    "faceCropDistance": 18.24828759089466,
+    "centeredFaceCrop": {
+      "left": 291,
+      "top": 19,
+      "width": 182,
+      "height": 182
+    },
+    "centeredWidth": 764,
+    "centeredAnchorX": 382,
+    "padLeft": 0,
+    "padRight": 184,
+    "centerMethod": "template"
+  },
+  {
+    "id": "rio",
+    "name": "리오",
+    "defaultBackgroundId": "eridu-tower-entrance",
+    "referenceSprite": "up_rio_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Rio.png",
+    "sift": {
+      "score": 0.97,
+      "scale": 0.601,
+      "method": "sift",
+      "faceCrop": {
+        "left": 140,
+        "top": 37,
+        "width": 121,
+        "height": 123
+      },
+      "goodMatches": 31,
+      "inliers": 26,
+      "inlierRatio": 0.839
+    },
+    "matchScore": 0.97,
+    "matchScale": 0.601,
+    "matchMethod": "sift",
+    "anchorX": 200.5,
+    "catalogFaceCrop": {
+      "left": 141,
+      "top": 37,
+      "width": 120,
+      "height": 120
+    },
+    "portraitFaceCrop": {
+      "left": 140,
+      "top": 37,
+      "width": 121,
+      "height": 123
+    },
+    "faceCropDistance": 1,
+    "centeredFaceCrop": {
+      "left": 141,
+      "top": 37,
+      "width": 120,
+      "height": 120
+    },
+    "centeredWidth": 402,
+    "centeredAnchorX": 201,
+    "padLeft": 0,
+    "padRight": 52,
+    "centerMethod": "template"
+  },
+  {
+    "id": "nagisa",
+    "name": "나기사",
+    "defaultBackgroundId": "trinity-terrace",
+    "referenceSprite": "up_nagisa_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Nagisa.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.705,
+      "method": "sift",
+      "faceCrop": {
+        "left": 240,
+        "top": 75,
+        "width": 157,
+        "height": 144
+      },
+      "goodMatches": 50,
+      "inliers": 45,
+      "inlierRatio": 0.9
+    },
+    "matchScore": 1,
+    "matchScale": 0.705,
+    "matchMethod": "sift",
+    "anchorX": 318.5,
+    "catalogFaceCrop": {
+      "left": 241,
+      "top": 70,
+      "width": 155,
+      "height": 155
+    },
+    "portraitFaceCrop": {
+      "left": 240,
+      "top": 75,
+      "width": 157,
+      "height": 144
+    },
+    "faceCropDistance": 5.0990195135927845,
+    "centeredFaceCrop": {
+      "left": 241,
+      "top": 70,
+      "width": 155,
+      "height": 155
+    },
+    "centeredWidth": 637,
+    "centeredAnchorX": 318.5,
+    "padLeft": 0,
+    "padRight": 121,
+    "centerMethod": "template"
+  },
+  {
+    "id": "mika",
+    "name": "미카",
+    "defaultBackgroundId": "trinity-terrace",
+    "referenceSprite": "up_mika_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Mika.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.626,
+      "method": "sift",
+      "faceCrop": {
+        "left": 178,
+        "top": 95,
+        "width": 142,
+        "height": 128
+      },
+      "goodMatches": 62,
+      "inliers": 55,
+      "inlierRatio": 0.887
+    },
+    "matchScore": 1,
+    "matchScale": 0.626,
+    "matchMethod": "sift",
+    "anchorX": 249,
+    "catalogFaceCrop": {
+      "left": 178,
+      "top": 88,
+      "width": 143,
+      "height": 143
+    },
+    "portraitFaceCrop": {
+      "left": 178,
+      "top": 95,
+      "width": 142,
+      "height": 128
+    },
+    "faceCropDistance": 7,
+    "centeredFaceCrop": {
+      "left": 178,
+      "top": 88,
+      "width": 143,
+      "height": 143
+    },
+    "centeredWidth": 499,
+    "centeredAnchorX": 249.5,
+    "padLeft": 0,
+    "padRight": 39,
+    "centerMethod": "template"
+  },
+  {
+    "id": "seia",
+    "name": "세이아",
+    "defaultBackgroundId": "trinity-terrace",
+    "referenceSprite": "up_seia_001.png",
+    "matchSpriteCentered": true,
+    "portraitFile": "Portrait_Seia.png",
+    "sift": {
+      "score": 1,
+      "scale": 0.767,
+      "method": "sift",
+      "faceCrop": {
+        "left": 171,
+        "top": 61,
+        "width": 190,
+        "height": 157
+      },
+      "goodMatches": 74,
+      "inliers": 71,
+      "inlierRatio": 0.96
+    },
+    "matchScore": 1,
+    "matchScale": 0.767,
+    "matchMethod": "sift",
+    "anchorX": 266,
+    "catalogFaceCrop": {
+      "left": 169,
+      "top": 43,
+      "width": 191,
+      "height": 191
+    },
+    "portraitFaceCrop": {
+      "left": 171,
+      "top": 61,
+      "width": 190,
+      "height": 157
+    },
+    "faceCropDistance": 18.110770276274835,
+    "centeredFaceCrop": {
+      "left": 169,
+      "top": 43,
+      "width": 191,
+      "height": 191
+    },
+    "centeredWidth": 529,
+    "centeredAnchorX": 264.5,
+    "padLeft": 77,
+    "padRight": 0,
+    "centerMethod": "template"
+  }
+]
