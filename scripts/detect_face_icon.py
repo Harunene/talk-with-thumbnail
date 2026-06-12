@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SIFT portrait 패치 위 fuyucc yolov8_animeface → 표정 icon crop (sprite 좌표)."""
+"""standing sprite 상단 bust에서 fuyucc face → iconCrop (sprite 좌표)."""
 
 from __future__ import annotations
 
@@ -51,6 +51,23 @@ def get_model():
     return _model
 
 
+def alpha_bounds(image: np.ndarray, threshold: int = 16) -> tuple[int, int, int, int]:
+    alpha = image[:, :, 3]
+    ys, xs = np.where(alpha > threshold)
+    if len(xs) == 0:
+        h, w = image.shape[:2]
+        return 0, 0, w, h
+    return int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())
+
+
+def sprite_upper_search_region(image: np.ndarray) -> tuple[int, int, int, int]:
+    """SIFT matcher와 동일: standing sprite 상단 bust (총 등 머리 위 소품 포함)."""
+    min_x, min_y, max_x, max_y = alpha_bounds(image)
+    body_height = max_y - min_y + 1
+    crop_height = max(48, int(body_height * 0.45))
+    return min_x, min_y, max_x - min_x + 1, crop_height
+
+
 def detect_face_patch(patch_bgr: np.ndarray) -> tuple[float, float, float, float, float]:
     model = get_model()
     results = model.predict(patch_bgr, conf=CONF, verbose=False)
@@ -64,7 +81,7 @@ def detect_face_patch(patch_bgr: np.ndarray) -> tuple[float, float, float, float
                 x1, y1, x2, y2 = box.xyxy[0].tolist()
                 best = (score, x1, y1, x2 - x1, y2 - y1)
     if best is None:
-        raise RuntimeError("fuyucc: no face detected in portrait patch")
+        raise RuntimeError("fuyucc: no face detected")
     return best
 
 
@@ -99,20 +116,18 @@ def detect_face_icon(sprite_path: str, portrait_path: str) -> dict:
     if image is None:
         raise FileNotFoundError(sprite)
 
-    fc = sift["faceCrop"]
-    ox, oy = int(fc["left"]), int(fc["top"])
-    w, h = int(fc["width"]), int(fc["height"])
-    patch = image[oy : oy + h, ox : ox + w]
+    ox, oy, rw, rh = sprite_upper_search_region(image)
+    patch = image[oy : oy + rh, ox : ox + rw]
     patch_bgr = cv2.cvtColor(patch, cv2.COLOR_BGRA2BGR)
 
     score, fx, fy, fw, fh = detect_face_patch(patch_bgr)
     icon = face_box_to_icon_crop(fx, fy, fw, fh, ox, oy)
 
     return {
-        "method": "fuyucc_yolov8x6",
+        "method": "fuyucc_yolov8x6_sprite_upper",
         "siftScore": sift["score"],
         "siftScale": sift["scale"],
-        "siftFaceCrop": fc,
+        "siftFaceCrop": sift["faceCrop"],
         "faceScore": round(score, 4),
         "faceBoxPatch": {
             "left": round(fx, 2),
@@ -120,6 +135,7 @@ def detect_face_icon(sprite_path: str, portrait_path: str) -> dict:
             "width": round(fw, 2),
             "height": round(fh, 2),
         },
+        "searchRegion": {"left": ox, "top": oy, "width": rw, "height": rh},
         "iconCrop": icon,
     }
 
