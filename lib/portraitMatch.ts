@@ -1,5 +1,5 @@
 import path from 'node:path';
-import type { CharacterId } from './characterCatalog.ts';
+import type { CharacterId } from './characterCatalog';
 
 /** Wiki Portrait와 표정이 일치하는 기준 스프라이트 (기본 001) */
 export const PORTRAIT_REFERENCE_EXPRESSION: Partial<Record<CharacterId, string>> = {

@@ -17,8 +17,8 @@ export interface ThumbnailLayoutOptions {
   zoomMode?: boolean;
   heightCm?: number;
   pose?: 'standing' | 'seated';
-  faceCrop?: { top: number; height: number };
-  iconCrop?: { top: number; height: number };
+  faceCrop?: CharacterFaceCrop;
+  iconCrop?: CharacterFaceCrop;
   footY?: number;
   thumbnailOffsetXPercent?: number;
 }
@@ -95,7 +95,7 @@ export function projectFaceCropToViewport(
 ): ViewportRect {
   const layout = getThumbnailCharacterLayout(spriteWidth, spriteHeight, {
     ...options,
-    iconCrop: options.iconCrop ?? { top: faceCrop.top, height: faceCrop.height },
+    iconCrop: options.iconCrop ?? faceCrop,
   });
   return {
     x: Math.round(layout.spriteLeft + faceCrop.left * layout.scale),

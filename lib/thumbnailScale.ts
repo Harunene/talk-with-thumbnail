@@ -1,5 +1,5 @@
-import { CHARACTER_CATALOG } from './characterCatalog.ts';
-import type { CharacterFaceCrop } from './characterCatalog.ts';
+import { CHARACTER_CATALOG } from './characterCatalog';
+import type { CharacterFaceCrop } from './characterCatalog';
 
 /** 히카리(147)·아리스(152) 기준 */
 export const THUMBNAIL_REFERENCE_HEIGHT_CM = (147 + 152) / 2;

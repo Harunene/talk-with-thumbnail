@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { spawn } from 'node:child_process';
-import { ensureWikiPortrait } from './wikiPortraits.ts';
+import { ensureWikiPortrait } from './wikiPortraits';
 
 const MATCH_SCRIPT = path.join(import.meta.dirname, '../scripts/match_portrait_face.py');
 
