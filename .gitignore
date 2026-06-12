@@ -19,6 +19,11 @@ dist
 # Misc
 .DS_Store
 *.pem
+.claude/
+.posthog/
+
+# ML weights (download via scripts/download_animeface_model.js)
+models/anime-face/*.pt
 
 # Debug
 npm-debug.log*
