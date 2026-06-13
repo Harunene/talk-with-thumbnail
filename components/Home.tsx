@@ -326,6 +326,7 @@ export default function Home({ messageId = '', initialData = null }: HomeProps) 
 
                 <div className="min-w-0 flex-1 shrink-0 lg:min-w-[280px]">
                   <ExpressionPicker
+                    key={imageType}
                     characterId={imageType}
                     value={subType}
                     onChange={handleSubTypeChange}
